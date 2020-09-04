@@ -93,6 +93,7 @@ public class RemoteServiceManager {
             else {
                 newsAbstract.geoInfo = null;
             }
+            return newsAbstract;
         }
     }
 

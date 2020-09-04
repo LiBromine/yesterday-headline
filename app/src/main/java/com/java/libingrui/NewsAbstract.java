@@ -1,5 +1,7 @@
 package com.java.libingrui;
 
+import androidx.annotation.NonNull;
+import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -7,6 +9,7 @@ import com.google.gson.Gson;
 
 @Entity
 public class NewsAbstract {
+    @NonNull
     @PrimaryKey
     public String id;
 
@@ -15,6 +18,7 @@ public class NewsAbstract {
     public String category;
     public String time;
     public String lang;
+    @Embedded
     public GeoInfo geoInfo;
     public String influence;
 
