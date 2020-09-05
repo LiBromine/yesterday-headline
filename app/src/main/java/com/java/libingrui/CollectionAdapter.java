@@ -9,6 +9,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 public class CollectionAdapter extends FragmentStateAdapter {
     int count = 10;
+//    TODO, get count in db
 
     public CollectionAdapter(Fragment fragment) {
         super(fragment);

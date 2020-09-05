@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,9 +33,7 @@ public class ListItemFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         Bundle args = getArguments();
-//        ((TextView) view.findViewById(R.id.text_test))
-//                .setText(Integer.toString(args.getInt(ARG_OBJECT)));
-
+//        TODO, get the displayed data
         Integer tmp = args.getInt(ARG_OBJECT);
         String[] data = new String[10];
         for (int i = 0; i < 10; i++) {
@@ -46,6 +46,8 @@ public class ListItemFragment extends Fragment {
         rLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(rLayoutManager);
         rAdapter = new ListItemViewAdapter(data);
+//        recyclerView.setOnClickListener();
+//        TODO, set listener
         recyclerView.setAdapter(rAdapter);
     }
 }

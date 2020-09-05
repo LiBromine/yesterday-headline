@@ -28,6 +28,10 @@ public class ListCollectionFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        setViewPagerAndTabLayout(view);
+    }
+
+    public void setViewPagerAndTabLayout(View view) {
         adapter = new CollectionAdapter(this);
         viewPager = view.findViewById(R.id.pager);
         viewPager.setAdapter(adapter);
@@ -41,5 +45,6 @@ public class ListCollectionFragment extends Fragment {
                     }
                 }
         ).attach();
+//    TODO, get the text displayed in tab layout
     }
 }
