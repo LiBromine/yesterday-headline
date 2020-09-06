@@ -61,7 +61,6 @@ public class ListItemFragment extends Fragment implements OnRefreshListener, OnL
         swipeToLoadLayout.setOnRefreshListener(this);
         swipeToLoadLayout.setOnLoadMoreListener(this);
         autoRefresh();
-        Log.v("debug", "hahah");
     }
 
     public void initRecycler(View view) {
@@ -103,6 +102,7 @@ public class ListItemFragment extends Fragment implements OnRefreshListener, OnL
                 if (newsList != null)  {
                     Log.v("debug", "onChanged starts");
                     data = newsList;
+                    if(newsList.list != null ) Log.v("debug", "newsList length =" + newsList.list.size());
                     rAdapter.setNewsList(data);
                 }
             }
