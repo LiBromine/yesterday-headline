@@ -61,7 +61,6 @@ public class ListItemFragment extends Fragment implements OnRefreshListener, OnL
         swipeToLoadLayout.setOnRefreshListener(this);
         swipeToLoadLayout.setOnLoadMoreListener(this);
         autoRefresh();
-        Log.v("debug", "hahah");
     }
 
     public void initRecycler(View view) {
@@ -93,13 +92,14 @@ public class ListItemFragment extends Fragment implements OnRefreshListener, OnL
     public void initViewModel(View view) {
         mViewModel = new ViewModelProvider(this).get(NewsViewModel.class);
 //        mViewModel = new ViewModelProvider(this, new ViewModelProvider.AndroidViewModelFactory(MainActivity.app)).get(NewsViewModel.class);
-        mViewModel.getNewsList(category).observe(this, new Observer<NewsList>() {
+        mViewModel.Var_getNewsList(category).observe(this, new Observer<NewsList>() {
             @Override
             public void onChanged(@Nullable final NewsList newsList) {
                 // Update the cached copy of the words in the adapter.
                 if (newsList != null)  {
                     Log.v("debug", "onChanged starts");
                     data = newsList;
+                    if(newsList.list != null ) Log.v("debug", "newsList length =" + newsList.list.size());
                     rAdapter.setNewsList(data);
                 }
             }
