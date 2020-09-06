@@ -9,6 +9,8 @@
     <string name="clear_cache">清除缓存</string>
     <string name="wechat">微信</string>
     <string name="sina">新浪</string>
+    <string name="edit">编辑</string>
+    <string name="done">完成</string>
 
     <!--    test string -->
     <string name="test">Test Output</string>

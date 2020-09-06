@@ -93,10 +93,10 @@ public class ListCollectionFragment extends Fragment {
             @Override
             public void onClick(View view) {
 //                TODO
-//                Intent intent = new Intent(getContext(), NewsActivity.class);
-//                final String CATEGORY = "category";
-//                intent.putExtra(CATEGORY, categoryList);
-//                startActivityForResult(intent, 23);
+                Intent intent = new Intent(getContext(), TypeActivity.class);
+                final String CATEGORY = "category";
+                intent.putExtra(CATEGORY, categoryList);
+                startActivityForResult(intent, 23);
                 Toast.makeText(getContext(), R.string.test, Toast.LENGTH_SHORT).show();
             }
         });

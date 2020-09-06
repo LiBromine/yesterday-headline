@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.widget.TextView;
@@ -28,13 +29,13 @@ public class NewsActivity extends AppCompatActivity {
             return;
         }
 
-        Log.v("debug", "achieve here");
+        // init content view
+        TextView tv = findViewById(R.id.news_content);
+        tv.setMovementMethod(ScrollingMovementMethod.getInstance());
 
         // init
         initToolbar();
         initViewModel();
-
-        Log.v("debug", "achieve here2");
 
         // send signal to ViewModel
         Intent intent = getIntent();
