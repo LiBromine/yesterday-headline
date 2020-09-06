@@ -95,7 +95,7 @@ public class ListItemFragment extends Fragment implements OnRefreshListener, OnL
     public void initViewModel(View view) {
         mViewModel = new ViewModelProvider(this).get(NewsViewModel.class);
 //        mViewModel = new ViewModelProvider(this, new ViewModelProvider.AndroidViewModelFactory(MainActivity.app)).get(NewsViewModel.class);
-        mViewModel.Var_getNewsList(category).observe(this, new Observer<NewsList>() {
+        mViewModel.getListByType(category).observe(this, new Observer<NewsList>() {
             @Override
             public void onChanged(@Nullable final NewsList newsList) {
                 // Update the cached copy of the words in the adapter.
@@ -112,7 +112,7 @@ public class ListItemFragment extends Fragment implements OnRefreshListener, OnL
 
     @Override
     public void onLoadMore() {
-        mViewModel.getMoreNews();
+        mViewModel.getMoreNews(category);
         swipeToLoadLayout.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -123,7 +123,7 @@ public class ListItemFragment extends Fragment implements OnRefreshListener, OnL
 
     @Override
     public void onRefresh() {
-        mViewModel.flushNews();
+        mViewModel.flushNews(category);
         Log.v("onRefresh", "Refreshing");
         swipeToLoadLayout.postDelayed(new Runnable() {
             @Override

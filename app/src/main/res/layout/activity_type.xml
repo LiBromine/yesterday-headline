@@ -40,12 +40,12 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="right"
+            android:layout_marginStart="100dp"
             android:layout_marginEnd="0dp"
-            android:layout_marginStart="120dp"
             android:gravity="center_horizontal|center_vertical"
             android:text="@string/edit"
-            android:textSize="17sp"
-            android:textColor="@color/myRed"/>
+            android:textColor="@color/myRed"
+            android:textSize="17sp" />
     </LinearLayout>
 
     <com.java.libingrui.MyGridLayout

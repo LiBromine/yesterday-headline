@@ -15,6 +15,7 @@ public class MyGridLayout extends GridLayout {
     private OnItemClickListener onItemClickListener;
     private List<String> data;
     private static int COLUMN = 4;
+    private int margin = 30;
 
     public MyGridLayout(Context context) {
         super(context);
@@ -53,6 +54,9 @@ public class MyGridLayout extends GridLayout {
         GridLayout.Spec row = GridLayout.spec(cnt / COLUMN);
         GridLayout.Spec col = GridLayout.spec(cnt % COLUMN);
         GridLayout.LayoutParams params = new GridLayout.LayoutParams(row, col);
+        params.width = getResources().getDisplayMetrics().widthPixels / 4 - margin * 2;
+        params.setMargins(margin, margin, margin, margin);
+        v.setLayoutParams(params);
         addView(v, params);
     }
 
