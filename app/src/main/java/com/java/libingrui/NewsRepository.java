@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.util.Log;
+import java.util.Map;
+
+import kotlinx.coroutines.DefaultExecutor;
 
 public class NewsRepository {
     private NewsDao mNewsDao;
@@ -25,6 +28,18 @@ public class NewsRepository {
         mNewsDao = db.newsDao();
         mGetNewsById = null;
         mGetNewsList = mNewsDao.getNewsList();
+    }
+
+    void updateEpidemicData() {
+        NewsRoomDatabase.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                Map<RegionName, DaysEpidemicData> data = new RemoteServiceManager().getEpidemicData();
+                synchronized (db) {
+                    //@TODO here
+                }
+            }
+        });
     }
 
     void flushNews() {
