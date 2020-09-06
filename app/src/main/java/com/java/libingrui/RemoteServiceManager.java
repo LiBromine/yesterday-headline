@@ -41,6 +41,9 @@ public class RemoteServiceManager {
             if( json != null) {
                 Gson gson = new Gson();
                 API_EVENTS_LIST api_events_list = gson.fromJson(json, API_EVENTS_LIST.class);
+                for(News news : api_events_list.data) {
+                    news.selected = 0;
+                }
 
                 result.addAll(api_events_list.data);
             }

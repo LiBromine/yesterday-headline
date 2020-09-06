@@ -46,7 +46,7 @@ public class NewsActivity extends AppCompatActivity {
 
     public void initViewModel() {
         mViewModel = new ViewModelProvider(this).get(NewsViewModel.class);
-        mViewModel.Var_getGetNewsById().observe(this, new Observer<News>() {
+        mViewModel.Var_getSelectedNews().observe(this, new Observer<News>() {
             @Override
             public void onChanged(News news) {
                 mNews = news;

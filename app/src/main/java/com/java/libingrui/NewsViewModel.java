@@ -8,13 +8,13 @@ import androidx.lifecycle.LiveData;
 public class NewsViewModel extends AndroidViewModel {
     private NewsRepository mRepository;
     private LiveData<NewsList> mGetNewsList;
-    private LiveData<News> mGetNewsById;
+    private LiveData<News> mGetSelectedNews;
 
     public NewsViewModel(Application application) {
         super(application);
         mRepository = new NewsRepository(application);
         mGetNewsList = mRepository.getNewsList();
-        mGetNewsById = null;
+        mGetSelectedNews = mRepository.getSelectedNews();
     }
 
     LiveData<NewsList> Var_getNewsList(String str) {
@@ -30,10 +30,10 @@ public class NewsViewModel extends AndroidViewModel {
     }
 
     void getNewsById(String target_id) {
-        mGetNewsById = mRepository.getNewsById(target_id);
+        mRepository.getNewsById(target_id);
     }
 
-    LiveData<News> Var_getGetNewsById() {
-        return mGetNewsById;
+    LiveData<News> Var_getSelectedNews() {
+        return mGetSelectedNews;
     }
 }
