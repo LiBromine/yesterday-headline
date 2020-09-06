@@ -1,118 +1,86 @@
 package com.java.libingrui;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.util.ArrayList;
+import java.util.List;
+import java.net.URL;
+
 import com.google.gson.Gson;
 
-import java.util.*;
-import java.io.*;
-import java.net.*;
+import android.util.Log;
 
-/**
- * Using this class to achieve TA's data
- * Actually, it is an URL reader
- */
 public class RemoteServiceManager {
+    private final int NEWS_PER_PAGE;
 
-    /**
-     * Get all news abstract, and return a list of NewsAbstract
-     * USE API_2 : https://covid-dashboard.aminer.cn/api/dist/events.json
-     * @return the list of NewsAbstract
-     */
-    public List<NewsAbstract> getAllNewsAbstract() {
-        String url = "https://covid-dashboard.aminer.cn/api/dist/events.json";
-        String json = loadJson(url);
-        Gson gson = new Gson();
-        GSON_AllNewsAbstract allNewsAbstract = gson.fromJson(json, GSON_AllNewsAbstract.class);
-
-        List<NewsAbstract> newsAbstracts = new ArrayList<>();
-
-        for(GSON_NewsAbstract gson_newsAbstract : allNewsAbstract.datas) {
-            newsAbstracts.add(gson_newsAbstract.toNewsAbstract());
-        }
-
-        return newsAbstracts;
+    RemoteServiceManager(final int NEWS_PER_PAGE) {
+        this.NEWS_PER_PAGE = NEWS_PER_PAGE;
     }
 
-    /**
-     * load remote json by url
-     * @param url
-     * @return a string format json
-     */
-    private String loadJson(String url) {
-        StringBuilder buffer = new StringBuilder();
+    public List<News> flushNews(String type) {
+        String base_url = "https://covid-dashboard.aminer.cn/api/events/list";
+        List<News> result = new ArrayList<News>();
+        if( type.equals("news")) {
+            String url = base_url + "?type=" + type + "&page=1" + "&size=" + NEWS_PER_PAGE;
 
-        try{
-            URL urlObject = new URL(url);
-            URLConnection uc = urlObject.openConnection();
-            BufferedReader in = new BufferedReader(new InputStreamReader(uc.getInputStream()));
-            String inputLine = null;
-            while( (inputLine = in.readLine()) != null) {
-                buffer.append(inputLine);
+            String json = remoteGET(url);
+            if( json != null) {
+                Gson gson = new Gson();
+                API_EVENTS_LIST api_events_list = gson.fromJson(json, API_EVENTS_LIST.class);
+
+                Pagination pagination = api_events_list.pagination;
+                int NUMBER_OF_PAGE = (pagination.total + NEWS_PER_PAGE - 1) / NEWS_PER_PAGE;
+                result.addAll(api_events_list.data);
+      /*          for(int i = 2; i <= NUMBER_OF_PAGE; ++i) {
+                    url = base_url + "?type=" + type + "&page=" + i + "&size=" + NEWS_PER_PAGE;
+                    json = remoteGET(url);
+                    api_events_list = gson.fromJson(json, API_EVENTS_LIST.class);
+                    result.addAll(api_events_list.data);
+                }*/
             }
-            in.close();
+        }
+        return result;
+    }
+
+    private String remoteGET(String path) {
+        try {
+            URL url = new URL(path);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.connect();
+            int responseCode = conn.getResponseCode();
+
+            StringBuilder buffer = new StringBuilder();
+            if(responseCode == HttpURLConnection.HTTP_OK) {
+                InputStream in = conn.getInputStream();
+                BufferedReader bin = new BufferedReader(new InputStreamReader(in));
+                String inputLine = null;
+                while ((inputLine = bin.readLine()) != null) {
+                    buffer.append(inputLine);
+                }
+                bin.close();
+                in.close();
+            }
+            conn.disconnect();
+            return buffer.toString();
         }
         catch (Exception e) {
             e.printStackTrace();
         }
-
-        return buffer.toString();
+        return null;
     }
+}
 
-    /**
-     * for GSON parser
-     */
-    class GSON_AllNewsAbstract {
-        public String tflag;
-        public List<GSON_NewsAbstract> datas;
-    }
+class API_EVENTS_LIST {
+    public List<News> data;
+    public Pagination pagination;
+    public boolean status;
+}
 
-    /**
-     * for GSON parser
-     */
-    class GSON_NewsAbstract {
-        public String _id;
-        public String type;
-        public String title;
-        public String category;
-        public String time;
-        public String lang;
-        public List<GSON_geoInfo> geoInfo;
-        public String influence;
-
-        public NewsAbstract toNewsAbstract() {
-            NewsAbstract newsAbstract = new NewsAbstract();
-            newsAbstract.id = this._id;
-            newsAbstract.type = this.type;
-            newsAbstract.title = this.title;
-            newsAbstract.category = this.category;
-            newsAbstract.time = this.time;
-            newsAbstract.lang = this.lang;
-            newsAbstract.influence = this.influence;
-            if(geoInfo.size() > 0) {
-                newsAbstract.geoInfo = this.geoInfo.get(0).toGeoInfo();
-            }
-            else {
-                newsAbstract.geoInfo = null;
-            }
-            return newsAbstract;
-        }
-    }
-
-    /**
-     * for GSON parser
-     */
-    class GSON_geoInfo {
-        public String originText;
-        public String geoName;
-        public String latitude;
-        public String longitude;
-
-        public GeoInfo toGeoInfo() {
-            GeoInfo geoInfo = new GeoInfo();
-            geoInfo.originText = this.originText;
-            geoInfo.geoName = this.geoName;
-            geoInfo.latitude = this.latitude;
-            geoInfo.longitude = this.longitude;
-            return geoInfo;
-        }
-    }
+class Pagination {
+    public int page;
+    public int size;
+    public int total;
 }

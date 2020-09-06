@@ -1,6 +1,6 @@
 package com.java.libingrui;
 
-public class RelativeEvent {
+public class RelatedEvent {
     public String id;
     public String score;
 }
