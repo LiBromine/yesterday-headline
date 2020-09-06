@@ -11,6 +11,7 @@ import java.util.List;
 
 @Dao
 public interface NewsDao {
+    //----------------News----------------
     @Insert
     void insert(News news);
 
@@ -19,9 +20,6 @@ public interface NewsDao {
 
     @Query("DELETE from News where News.type='news'")
     void deleteAllNews();
-
-    @Query("SELECT * from NewsList")
-    LiveData<NewsList> getNewsList();
 
     @Query("SELECT * from News where News.selected=1")
     LiveData<News> getSelectedNews();
@@ -32,14 +30,31 @@ public interface NewsDao {
     @Update
     void updateNews(News news);
 
+    //------------NewsList---------------
     @Insert
     void insert(NewsList newslist);
 
     @Query("DELETE from NewsList")
     void deleteAllNewsList();
 
+    @Query("SELECT * from NewsList where type like :target_type")
+    NewsList getNewsListByType(String target_type);
+
+    @Update
+    void updateNewsList(NewsList newslist);
+
+    @Query("SELECT * from NewsList where type='news'")
+    LiveData<NewsList> getNewsList();
+
+    @Query("SELECT * from NewsList where type='paper'")
+    LiveData<NewsList> getPaperList();
+
+    //------------EpidemicInfo------------
     @Insert
     void insert(EpidemicInfo info);
+
+    @Query("DELETE from EpidemicInfo")
+    void deleteAllEpidemicInfo();
 
     @Query("SELECT * from EpidemicInfo where country like :target_country and province like :target_province and county like :target_county")
     List<EpidemicInfo> getEpidemicInfoByRegionName(String target_country, String target_province, String target_county);

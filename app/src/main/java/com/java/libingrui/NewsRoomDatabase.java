@@ -46,6 +46,7 @@ abstract class NewsRoomDatabase extends RoomDatabase {
                     NewsDao dao = INSTANCE.newsDao();
                     dao.deleteAllNews();
                     dao.deleteAllNewsList();
+                    dao.deleteAllEpidemicInfo();
                 }
             });
         }
