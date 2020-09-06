@@ -37,4 +37,39 @@ public interface NewsDao {
 
     @Query("DELETE from NewsList")
     void deleteAllNewsList();
+
+    @Insert
+    void insert(EpidemicInfo info);
+
+    @Query("SELECT * from EpidemicInfo where country like :target_country and province like :target_province and county like :target_county")
+    List<EpidemicInfo> getEpidemicInfoByRegionName(String target_country, String target_province, String target_county);
+
+    @Query("SELECT country from EpidemicInfo")
+    LiveData<List<String>> getCountryList();
+
+    @Query("SELECT * from EpidemicInfo where country like :target_country")
+    List<EpidemicInfo> getProvinceOfCountryList(String target_country);
+
+    @Query("SELECT * from EpidemicInfo where country like :target_country and province like :target_province")
+    List<EpidemicInfo> getCountyOfProvinceList(String target_country, String target_province);
+
+    @Query("SELECT * from EpidemicInfo where country like :target_country and province like :target_province" +
+            " and county like :target_county and timeValue >= :beginTime and timeValue < :endTime")
+    List<EpidemicInfo> getEpidemicInfoByRegionNameWithTimeLimit(String target_country, String target_province, String target_county,
+                                                                int beginTime, int endTime);
+
+    @Query("SELECT * from EpidemicInfo where selected = 1")
+    LiveData<List<EpidemicInfo>> getSelectedEpidemicInfo();
+
+    @Query("SELECT province from EpidemicInfo where selected = 1")
+    LiveData<List<String>> getSelectedProvince();
+
+    @Query("SELECT county from EpidemicInfo where selected = 1")
+    LiveData<List<String>> getSelectedCounty();
+
+    @Query("SELECT * from EpidemicInfo where selected = 1")
+    List<EpidemicInfo> getNormalSelectedEpidemicInfo();
+
+    @Update
+    void updateEpidemicInfo(EpidemicInfo info);
 }
