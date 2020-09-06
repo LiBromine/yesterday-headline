@@ -56,7 +56,6 @@ public class NewsActivity extends AppCompatActivity {
         mViewModel.Var_getSelectedNews().observe(this, new Observer<News>() {
             @Override
             public void onChanged(@Nullable final News news) {
-                Log.v("debug", "news ONchanged =" + news.title);
                 if (news != null) {
                     mNews = news;
                     setText(mNews);

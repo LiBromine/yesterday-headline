@@ -46,11 +46,6 @@ abstract class NewsRoomDatabase extends RoomDatabase {
                     NewsDao dao = INSTANCE.newsDao();
                     dao.deleteAllNews();
                     dao.deleteAllNewsList();
-                    News fakeNews = new News();
-                    fakeNews._id = "fakeNews";
-                    fakeNews.title = "fakeNews";
-                    fakeNews.content = "fakeNews";
-                    dao.insert(fakeNews);
                 }
             });
         }
