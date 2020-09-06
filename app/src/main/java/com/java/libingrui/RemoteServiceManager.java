@@ -34,7 +34,7 @@ public class RemoteServiceManager {
     public List<News> flushNews(String type) {
         String base_url = "https://covid-dashboard.aminer.cn/api/events/list";
         List<News> result = new ArrayList<News>();
-        if( type.equals("news")) {
+        if( type.equals("news") || type.equals("paper")) {
             String url = base_url + "?type=" + type + "&page=" + PAGE_NUMBER + "&size=" + NEWS_PER_PAGE;
 
             String json = remoteGET(url);
