@@ -66,8 +66,6 @@ public class ListItemFragment extends Fragment implements OnRefreshListener, OnL
 
     public void initRecycler(View view) {
         Bundle args = getArguments();
-//        TODO, get the displayed data
-        Integer tmp = args.getInt(POSITION);
         category = args.getString(CATEGORY);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.swipe_target);
@@ -93,7 +91,6 @@ public class ListItemFragment extends Fragment implements OnRefreshListener, OnL
     }
 
     public void initViewModel(View view) {
-        // TODO, unsure
         mViewModel = new ViewModelProvider(this).get(NewsViewModel.class);
 //        mViewModel = new ViewModelProvider(this, new ViewModelProvider.AndroidViewModelFactory(MainActivity.app)).get(NewsViewModel.class);
         mViewModel.getNewsList(category).observe(this, new Observer<NewsList>() {

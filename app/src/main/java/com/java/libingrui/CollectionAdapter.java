@@ -23,9 +23,13 @@ public class CollectionAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         // Return a NEW fragment instance in createFragment(int)
-        Fragment fragment = new ListItemFragment();
+        Fragment fragment = new ListItemFragment();;
+        if (categoryList != null) {
+            // TODO, create special fragment
+        }
+
+        // give args
         Bundle args = new Bundle();
-        // Our object is just an integer :-P
         args.putInt(ListItemFragment.POSITION, position);
         if (categoryList != null && categoryList.size() > position) {
             args.putString(ListItemFragment.CATEGORY, categoryList.get(position));
