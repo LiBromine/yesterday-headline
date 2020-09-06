@@ -1,5 +1,6 @@
 package com.java.libingrui;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
@@ -10,6 +11,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.widget.TextView;
+
+import android.util.Log;
 
 import org.w3c.dom.Text;
 
@@ -25,9 +28,13 @@ public class NewsActivity extends AppCompatActivity {
             return;
         }
 
+        Log.v("debug", "achieve here");
+
         // init
         initToolbar();
         initViewModel();
+
+        Log.v("debug", "achieve here2");
 
         // send signal to ViewModel
         Intent intent = getIntent();
@@ -48,9 +55,12 @@ public class NewsActivity extends AppCompatActivity {
         mViewModel = new ViewModelProvider(this).get(NewsViewModel.class);
         mViewModel.Var_getGetNewsById().observe(this, new Observer<News>() {
             @Override
-            public void onChanged(News news) {
-                mNews = news;
-                setText(mNews);
+            public void onChanged(@Nullable final News news) {
+                Log.v("debug", "news ONchanged =" + news.title);
+                if (news != null) {
+                    mNews = news;
+                    setText(mNews);
+                }
             }
         });
     }
