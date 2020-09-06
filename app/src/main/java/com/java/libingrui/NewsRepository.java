@@ -67,4 +67,8 @@ public class NewsRepository {
     LiveData<NewsList> getNewsList() {
         return mGetNewsList;
     }
+
+    LiveData<News> getNewsById(String id) {
+        return mGetNewsById = mNewsDao.getNewsById(id);
+    }
 }
