@@ -22,19 +22,57 @@
             android:textStyle="bold"
             android:textSize="20sp" />
 
-        <SearchView
-            android:id="@+id/search_button"
-            android:iconifiedByDefault="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            />
+<!--        <SearchView-->
+<!--            android:id="@+id/search_button"-->
+<!--            android:iconifiedByDefault="true"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="end"-->
+<!--            />-->
     </androidx.appcompat.widget.Toolbar>
 
     <TextView
-        android:id="@+id/news"
+        android:id="@+id/news_title"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal|center_vertical"/>
+        android:layout_height="wrap_content"
+        android:padding="1dp"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:text="@string/test"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="10dp"
+        android:lineSpacingMultiplier="0.9" />
+
+    <TextView
+        android:id="@+id/news_source"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="1dp"
+        android:text="@string/test_source"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/news_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="1dp"
+        android:text="@string/test_source"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/news_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="" />
+
+    <TextView
+        android:id="@+id/news_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="1dp"
+        android:text="@string/test_text"
+        android:textSize="20sp" />
+
 
 </LinearLayout>

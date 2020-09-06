@@ -27,7 +27,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 public class MainActivity extends AppCompatActivity {
-    public static final String TEST = "test";
+    public static final String ID = "id";
     public static Application app;
 
     private NewsViewModel mNewsViewModel;
