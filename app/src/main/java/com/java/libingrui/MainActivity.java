@@ -1,6 +1,8 @@
 package com.java.libingrui;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Application;
 import android.content.Context;
@@ -14,9 +16,21 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.view.View;
+
+import java.util.List;
+
+import android.widget.TextView;
+
+import android.os.AsyncTask;
+
+import android.util.Log;
+
 public class MainActivity extends AppCompatActivity {
     public static final String TEST = "test";
     public static Application app;
+
+    private NewsViewModel mNewsViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,3 +69,4 @@ public class MainActivity extends AppCompatActivity {
         // All other menu item clicks are handled by <code><a href="/reference/android/app/Activity.html#onOptionsItemSelected(android.view.MenuItem)">onOptionsItemSelected()</a></code>
     }
 }
+
