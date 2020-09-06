@@ -7,12 +7,16 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-public class CollectionAdapter extends FragmentStateAdapter {
-    int count = 10;
-//    TODO, get count in db
+import java.util.ArrayList;
+import java.util.List;
 
-    public CollectionAdapter(Fragment fragment) {
+public class CollectionAdapter extends FragmentStateAdapter {
+    List<String> categoryList;
+//    TODO, get count in db and change constructor
+
+    public CollectionAdapter(Fragment fragment, List<String> list) {
         super(fragment);
+        categoryList = list;
     }
 
     @NonNull
@@ -22,14 +26,29 @@ public class CollectionAdapter extends FragmentStateAdapter {
         Fragment fragment = new ListItemFragment();
         Bundle args = new Bundle();
         // Our object is just an integer :-P
-        args.putInt(ListItemFragment.ARG_OBJECT, position + 1);
+        args.putInt(ListItemFragment.POSITION, position);
+        if (categoryList != null && categoryList.size() > position) {
+            args.putString(ListItemFragment.CATEGORY, categoryList.get(position));
+        } else {
+            args.putString(ListItemFragment.CATEGORY, "Error");
+        }
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public int getItemCount() {
-        return count;
+        if (categoryList != null) {
+            return categoryList.size();
+        } else {
+            return 0;
+        }
+    }
+
+    // TODO
+    public void setCategoryList(List<String> list) {
+        categoryList = list;
+        notifyDataSetChanged();
     }
 }
 

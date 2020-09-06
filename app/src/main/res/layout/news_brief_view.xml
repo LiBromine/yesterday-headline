@@ -7,7 +7,7 @@
     android:layout_marginHorizontal="20dp">
 
     <TextView
-        android:id="@+id/news_title"
+        android:id="@+id/news_brief_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="1dp"
@@ -19,7 +19,7 @@
         android:lineSpacingMultiplier="0.9" />
 
     <TextView
-        android:id="@+id/news_text"
+        android:id="@+id/news_brief_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="1dp"
@@ -27,11 +27,17 @@
         android:textSize="20sp" />
 
     <TextView
-        android:id="@+id/news_source"
+        android:id="@+id/news_brief_source"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="1dp"
         android:text="@string/test_source"
         android:textSize="12sp" />
 
+    <TextView
+        android:id="@+id/news_brief_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="" />
 </LinearLayout>

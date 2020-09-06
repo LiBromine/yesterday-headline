@@ -1,15 +1,16 @@
 <resources>
     <string name="app_name">yesterday-headline</string>
     <string name="app_name_ch">昨日头条</string>
-<!--    button/ menu text -->
+    <!--    button/ menu text -->
     <string name="select_category">Category</string>
     <string name="search">Search</string>
     <string name="others">Others</string>
     <string name="history">查看历史</string>
     <string name="clear_cache">清除缓存</string>
 
-<!--    test string -->
+    <!--    test string -->
     <string name="test">Test Output</string>
     <string name="test_source">XinHua 2020-08-23</string>
     <string name="test_text">I think I\'m falling for you. If you don\'t call me, I\'ll jump off the roof.</string>
+    <string name="www">wu wu wu</string>
 </resources>

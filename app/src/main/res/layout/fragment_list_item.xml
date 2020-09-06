@@ -1,21 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fragment_test"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
-    <!--
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal|center_vertical"
-        android:text=""
-        android:id="@+id/text_test">
-
-    </TextView>
-    -->
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
@@ -25,3 +15,31 @@
     </androidx.recyclerview.widget.RecyclerView>
 
 </LinearLayout>
+-->
+<com.aspsine.swipetoloadlayout.SwipeToLoadLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:id="@+id/swipeToLoadLayout"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context="com.java.libingrui.MainActivity">
+
+<com.java.libingrui.RefreshHeaderView
+    android:id="@id/swipe_refresh_header"
+    android:layout_width="match_parent"
+    android:gravity="center"
+    android:layout_height="100dp" />
+
+<androidx.recyclerview.widget.RecyclerView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/news_brief_list_view">
+
+</androidx.recyclerview.widget.RecyclerView>
+
+<com.java.libingrui.LoadMoreFooterView
+    android:id="@id/swipe_load_more_footer"
+    android:layout_width="match_parent"
+    android:gravity="center"
+    android:layout_height="100dp" />
+
+</com.aspsine.swipetoloadlayout.SwipeToLoadLayout>

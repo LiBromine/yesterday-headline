@@ -2,19 +2,27 @@ package com.java.libingrui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Application;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String TEST = "test";
+    public static Application app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        app = getApplication();
 
         if (savedInstanceState != null) {
             return;
