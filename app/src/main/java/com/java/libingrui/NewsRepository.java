@@ -13,7 +13,7 @@ import kotlinx.coroutines.DefaultExecutor;
 
 public class NewsRepository {
     private NewsDao mNewsDao;
-    private LiveData<News> mGetNewsById;
+    private LiveData<News> mSelectedNews;
     private LiveData<NewsList> mGetNewsList;
     private NewsList cached_mGetNewsList;
 
@@ -26,7 +26,7 @@ public class NewsRepository {
     NewsRepository(Application application) {
         db = NewsRoomDatabase.getDatabase(application);
         mNewsDao = db.newsDao();
-        mGetNewsById = null;
+        mSelectedNews = mNewsDao.getSelectedNews();
         mGetNewsList = mNewsDao.getNewsList();
     }
 
@@ -59,7 +59,6 @@ public class NewsRepository {
                         if(!isAchieveCachedFirst(append_news)) {
                             for (int i = 0; i < append_news.size(); ++i) {
                                 News news = append_news.get(i);
-                                news.pageNumber = loaded_news_page_count;
                                 mNewsDao.insert(news);
                             }
                             current_news.addAll(append_news);
@@ -67,7 +66,6 @@ public class NewsRepository {
                         else {
                             for (int i = 0; i < append_news.size(); ++i) {
                                 News news = append_news.get(i);
-                                news.pageNumber = loaded_news_page_count;
                                 if(cached_mGetNewsList.list.size() > 0 && news._id.equals(cached_mGetNewsList.list.get(0)._id)) {
                                     Log.v("debug", "break at " + i);
                                     break;
@@ -156,7 +154,25 @@ public class NewsRepository {
         return mGetNewsList;
     }
 
-    LiveData<News> getNewsById(String id) {
-        return mGetNewsById = mNewsDao.getNewsById(id);
+    LiveData<News> getSelectedNews() {
+        return mSelectedNews;
+    }
+
+    void getNewsById(final String id) {
+        NewsRoomDatabase.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (db) {
+                    List<News> list = mNewsDao.getNormalSelectedNews();
+                    for(News item : list) {
+                        item.selected = 0;
+                        mNewsDao.updateNews(item);
+                    }
+                    News current_news = mNewsDao.getNewsById(id);
+                    current_news.selected = 1;
+                    mNewsDao.updateNews(current_news);
+                }
+            }
+        });
     }
 }

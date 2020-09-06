@@ -43,6 +43,6 @@ public class News {
     public List<String> urls;
     public String year;
 
-    public int pageNumber;
+    public int selected;
 
 }

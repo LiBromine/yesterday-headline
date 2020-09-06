@@ -5,6 +5,7 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Transaction;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -14,16 +15,22 @@ public interface NewsDao {
     void insert(News news);
 
     @Query("SELECT * from News where News._id LIKE :target_id")
-    LiveData<News> getNewsById(String target_id);
-
-    @Query("SELECT * from News where News.type='news' AND News.pageNumber Like :target_page")
-    List<News> getNewsByPageNumber(int target_page);
+    News getNewsById(String target_id);
 
     @Query("DELETE from News where News.type='news'")
     void deleteAllNews();
 
     @Query("SELECT * from NewsList")
     LiveData<NewsList> getNewsList();
+
+    @Query("SELECT * from News where News.selected=1")
+    LiveData<News> getSelectedNews();
+
+    @Query("SELECT * from News where News.selected=1")
+    List<News> getNormalSelectedNews();
+
+    @Update
+    void updateNews(News news);
 
     @Insert
     void insert(NewsList newslist);
