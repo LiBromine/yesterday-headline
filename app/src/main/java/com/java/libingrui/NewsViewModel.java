@@ -15,7 +15,7 @@ public class NewsViewModel extends AndroidViewModel {
         mGetNewsList = mRepository.getNewsList();
     }
 
-    LiveData<NewsList> getNewsList() {
+    LiveData<NewsList> getNewsList(String str) {
         return mGetNewsList;
     }
 

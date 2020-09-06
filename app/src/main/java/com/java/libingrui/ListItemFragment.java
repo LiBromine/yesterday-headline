@@ -63,7 +63,7 @@ public class ListItemFragment extends Fragment implements OnRefreshListener, OnL
     }
 
     public void initSwipeView(View view) {
-        swipeToLoadLayout = (SwipeToLoadLayout) view.findViewById(R.id.swipeToLoadLayout)
+        swipeToLoadLayout = (SwipeToLoadLayout) view.findViewById(R.id.swipeToLoadLayout);
         swipeToLoadLayout.setOnRefreshListener(this);
         swipeToLoadLayout.setOnLoadMoreListener(this);
         autoRefresh();
