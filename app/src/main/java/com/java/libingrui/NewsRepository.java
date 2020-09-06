@@ -4,6 +4,7 @@ import android.app.Application;
 import androidx.lifecycle.LiveData;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import android.util.Log;
@@ -17,6 +18,8 @@ public class NewsRepository {
 
     private LiveData<NewsList> mGetNewsList;
     private LiveData<NewsList> mGetPaperList;
+
+    private LiveData<NewsList> mGetSearchList;
 
     private LiveData<List<String>> mCountryList;
     private LiveData<List<String>> mSelectedProvinceList;
@@ -36,6 +39,8 @@ public class NewsRepository {
 
         mGetNewsList = mNewsDao.getNewsList();
         mGetPaperList = mNewsDao.getPaperList();
+
+        mGetSearchList = mNewsDao.getSearchList();
 
         mCountryList = mNewsDao.getCountryList();
         mSelectedProvinceList = mNewsDao.getSelectedProvince();
@@ -57,6 +62,22 @@ public class NewsRepository {
 
     LiveData<List<EpidemicInfo>> getSelectedEpidemicInfo() {
         return mSelectedEpidemicInfoList;
+    }
+
+    LiveData<NewsList> getNewsList() {
+        return mGetNewsList;
+    }
+
+    LiveData<NewsList> getPaperList() {
+        return mGetPaperList;
+    }
+
+    LiveData<NewsList> getSearchList() {
+        return mGetSearchList;
+    }
+
+    LiveData<News> getSelectedNews() {
+        return mSelectedNews;
     }
 
     void updateEpidemicData() {
@@ -235,18 +256,6 @@ public class NewsRepository {
         });
     }
 
-    LiveData<NewsList> getNewsList() {
-        return mGetNewsList;
-    }
-
-    LiveData<NewsList> getPaperList() {
-        return mGetPaperList;
-    }
-
-    LiveData<News> getSelectedNews() {
-        return mSelectedNews;
-    }
-
     void getNewsById(final String id) {
         NewsRoomDatabase.databaseWriteExecutor.execute(new Runnable() {
             @Override
@@ -319,6 +328,42 @@ public class NewsRepository {
                     for(EpidemicInfo item : current_info) {
                         item.selected = 1;
                         mNewsDao.updateEpidemicInfo(item);
+                    }
+                }
+            }
+        });
+    }
+
+    void searchNewsByKeyword(final String keyword) {
+        NewsRoomDatabase.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                RemoteServiceManager remoteServiceManager = new RemoteServiceManager();
+                List<EntityDetails> entityDetailsList = remoteServiceManager.getEntitiesByKeyWord(keyword);
+                List<News> relatedNews = new ArrayList<News>();
+                Set<String> event_ids = new HashSet<String>();
+                for(EntityDetails entity : entityDetailsList) {
+                    for(String event_id : entity.related_events) {
+                        event_ids.add(event_id);
+                    }
+                }
+                for(String event_id : event_ids) {
+                    News current_news = remoteServiceManager.getNewsById(event_id);
+                    if(current_news != null) {
+                        relatedNews.add(current_news);
+                    }
+                }
+
+                synchronized (db) {
+                    NewsList list = mNewsDao.getNewsListByType("search");
+                    if(list != null) {
+                        list.list = relatedNews;
+                        mNewsDao.updateNewsList(list);
+                    }
+                    else {
+                        list = new NewsList("search");
+                        list.list = relatedNews;
+                        mNewsDao.updateNewsList(list);
                     }
                 }
             }

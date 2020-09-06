@@ -13,6 +13,8 @@ public class NewsViewModel extends AndroidViewModel {
     private LiveData<NewsList> mNewsList;
     private LiveData<NewsList> mPapersList;
 
+    private LiveData<NewsList> mSearchList;
+
     private LiveData<News> mGetSelectedNews;
 
     private LiveData<List<String>> mCountryList;
@@ -26,6 +28,8 @@ public class NewsViewModel extends AndroidViewModel {
 
         mNewsList = mRepository.getNewsList();
         mPapersList = mRepository.getPaperList();
+
+        mSearchList = mRepository.getSearchList();
 
         mGetSelectedNews = mRepository.getSelectedNews();
 
@@ -41,6 +45,9 @@ public class NewsViewModel extends AndroidViewModel {
         }
         if(type.equals("paper")) {
             return mPapersList;
+        }
+        if(type.equals("search")) {
+            return mSearchList;
         }
         //@TODO throw an Exception rather than return a null, because return a null may cause system crash
         return null;
@@ -88,6 +95,10 @@ public class NewsViewModel extends AndroidViewModel {
 
     void getNewsById(String target_id) {
         mRepository.getNewsById(target_id);
+    }
+
+    void searchNewsByKeyword(final String keyword) {
+        mRepository.searchNewsByKeyword(keyword);
     }
 
     LiveData<News> Var_getSelectedNews() {

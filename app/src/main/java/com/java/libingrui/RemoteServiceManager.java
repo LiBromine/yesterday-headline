@@ -15,6 +15,9 @@ import java.util.Map.Entry;
 import com.google.gson.Gson;
 import com.google.gson.internal.$Gson$Preconditions;
 
+import android.graphics.Bitmap;
+
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 public class RemoteServiceManager {
@@ -71,6 +74,61 @@ public class RemoteServiceManager {
             //@TODO change log file to throw Exception
         }
         return result;
+    }
+
+    public News getNewsById(String id) {
+        String url = "https://covid-dashboard.aminer.cn/event/" + id;
+        String json = remoteGET(url);
+        if(json != null) {
+            Gson gson = new Gson();
+            API_GETNEWSBYID api_getnewsbyid = gson.fromJson(json, API_GETNEWSBYID.class);
+            return api_getnewsbyid.data;
+        }
+        else {
+            return null;
+        }
+    }
+
+    public EntityDetails getEntityByUrl(String url) {
+        String base_url = "https://covid-dashboard.aminer.cn/api/entity?url=" + url;
+        String json = remoteGET(url);
+        if(json != null) {
+            Gson gson = new Gson();
+            API_GETENTITYBYURL api_getentitybyurl = gson.fromJson(json, API_GETENTITYBYURL.class);
+            return api_getentitybyurl.data;
+        }
+        else {
+            return null;
+        }
+    }
+
+    public List<EntityDetails> getEntitiesByKeyWord(String keyWord) {
+        String url = "https://innovaapi.aminer.cn/covid/api/v1/pneumonia/entityquery?entity=" + keyWord;
+        String json = remoteGET(url);
+        List<EntityDetails> list = new ArrayList<EntityDetails>();
+        if(json != null) {
+            Gson gson = new Gson();
+            API_GETENTITIESBYKEYWORD api_getentitiesbykeyword = gson.fromJson(json, API_GETENTITIESBYKEYWORD.class);
+            list.addAll(api_getentitiesbykeyword.data);
+        }
+        return list;
+    }
+
+    public Bitmap getBitmapByUrl(String url) {
+        Bitmap bitmap = null;
+        try {
+            URL imageurl = new URL(url);
+            HttpURLConnection conn = (HttpURLConnection) imageurl.openConnection();
+            conn.setDoInput(true);
+            conn.connect();
+            InputStream is = conn.getInputStream();
+            bitmap = BitmapFactory.decodeStream(is);
+            is.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bitmap;
     }
 
     private RegionName String2RegionName(String str) {
@@ -151,4 +209,20 @@ class API_EPIDEMIC {
 class API_DAYSEPIDEMICDATA {
     public String begin;
     public List<int[]> data;
+}
+
+class API_GETNEWSBYID {
+    public News data;
+    public boolean status;
+}
+
+class API_GETENTITYBYURL {
+    public EntityDetails data;
+    public boolean status;
+}
+
+class API_GETENTITIESBYKEYWORD {
+    public int code;
+    public String msg;
+    public List<EntityDetails> data;
 }

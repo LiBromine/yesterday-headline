@@ -49,6 +49,9 @@ public interface NewsDao {
     @Query("SELECT * from NewsList where type='paper'")
     LiveData<NewsList> getPaperList();
 
+    @Query("SELECT * from NewsList where type='search'")
+    LiveData<NewsList> getSearchList();
+
     //------------EpidemicInfo------------
     @Insert
     void insert(EpidemicInfo info);
