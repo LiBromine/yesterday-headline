@@ -1,43 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/news_brief"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/news_brief_cardview"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_marginHorizontal="20dp">
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    app:cardBackgroundColor="@color/cardview_light_background"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="12dp">
 
-    <TextView
-        android:id="@+id/news_brief_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="1dp"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:text="@string/test"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="10dp"
-        android:lineSpacingMultiplier="0.9" />
 
-    <TextView
-        android:id="@+id/news_brief_text"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/news_brief_list"
         android:layout_height="wrap_content"
-        android:padding="1dp"
-        android:text="@string/test_text"
-        android:textSize="20sp" />
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="5dp">
 
-    <TextView
-        android:id="@+id/news_brief_source"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="1dp"
-        android:text="@string/test_source"
-        android:textSize="12sp" />
+        <TextView
+            android:id="@+id/news_brief_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="1dp"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:text="@string/test"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="10dp"
+            android:lineSpacingMultiplier="0.9" />
 
-    <TextView
-        android:id="@+id/news_brief_id"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:text="" />
-</LinearLayout>
+        <TextView
+            android:id="@+id/news_brief_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="1dp"
+            android:text="@string/test_text"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/news_brief_source"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="1dp"
+            android:text="@string/test_source"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/news_brief_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="" />
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

@@ -19,12 +19,20 @@ public class NewsActivity extends AppCompatActivity {
             return;
         }
 
+        initToolbar();
+
         Intent intent = getIntent();
         String message = intent.getStringExtra(MainActivity.TEST);
 
         // Capture the layout's TextView and set the string as its text
         TextView textView = findViewById(R.id.news);
         textView.setText(message);
+    }
+
+    public void initToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
     }
 
     @Override

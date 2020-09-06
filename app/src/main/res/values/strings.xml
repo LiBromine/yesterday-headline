@@ -7,6 +7,8 @@
     <string name="others">Others</string>
     <string name="history">查看历史</string>
     <string name="clear_cache">清除缓存</string>
+    <string name="wechat">微信</string>
+    <string name="sina">新浪</string>
 
     <!--    test string -->
     <string name="test">Test Output</string>

@@ -45,10 +45,10 @@ public class ListCollectionFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        mViewModel = new ViewModelProvider(this).get(NewsViewModel.class);
         initCategory();
         initViewPagerAndTabLayout(view);
 
-        mViewModel = new ViewModelProvider(this).get(NewsViewModel.class);
 //        mViewModel.getNewsList().observe(this, new Observer<NewsList>() {
 //            @Override
 //            public void onChanged(NewsList newsList) {
@@ -64,8 +64,8 @@ public class ListCollectionFragment extends Fragment {
         // TODO
         if (categoryList == null) {
             categoryList = new ArrayList<>();
-            categoryList.add("News");
-            categoryList.add("Paper");
+            categoryList.add("news");
+            categoryList.add("paper");
         }
 //        adapter.setCategoryList(categoryList);
     }
@@ -73,6 +73,7 @@ public class ListCollectionFragment extends Fragment {
     public void initViewPagerAndTabLayout(View view) {
         adapter = new CollectionAdapter(this, categoryList);
         viewPager = view.findViewById(R.id.pager);
+        viewPager.setPageTransformer(new ZoomOutPageTransformer());
         viewPager.setAdapter(adapter);
         TabLayout tabLayout = view.findViewById(R.id.tab_layout);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);

@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -16,6 +17,8 @@ public class ListItemViewAdapter extends RecyclerView.Adapter<ListItemViewAdapte
     private NewsList mList;
     private Context mContext;
     private OnItemClickListener mOnItemClickListener;
+    public static int TITLE_TRUNCATE = 30;
+    public static int CONTENT_TRUNCATE = 30;
 
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
@@ -28,14 +31,14 @@ public class ListItemViewAdapter extends RecyclerView.Adapter<ListItemViewAdapte
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
     public static class NewsViewHolder extends RecyclerView.ViewHolder {
-        public LinearLayout root;
+        public CardView root;
         public TextView titleView;
         public TextView textView;
         public TextView srcView;
         public TextView idView;
         public NewsViewHolder(View view) {
             super(view);
-            root = (LinearLayout) view;
+            root = (CardView) view;
             titleView = view.findViewById(R.id.news_brief_title);
             textView = view.findViewById(R.id.news_brief_text);
             srcView = view.findViewById(R.id.news_brief_source);
@@ -63,11 +66,10 @@ public class ListItemViewAdapter extends RecyclerView.Adapter<ListItemViewAdapte
     public void onBindViewHolder(@NonNull NewsViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        // TODO, display the data
         if (mList != null && mList.list != null) {
             News item = mList.list.get(position);
-            holder.titleView.setText(item.title);
-            holder.textView.setText(item.content);
+            holder.titleView.setText(compressTitle(item.title));
+            holder.textView.setText(compressContent(item.content));
             String source = item.source + "  " + item.date;
             holder.srcView.setText(source);
             holder.idView.setText(item._id);
@@ -101,6 +103,22 @@ public class ListItemViewAdapter extends RecyclerView.Adapter<ListItemViewAdapte
     void setNewsList(NewsList list) {
         mList = list;
         notifyDataSetChanged();
+    }
+
+    private String compressTitle(String title) {
+        if (title.length() > TITLE_TRUNCATE) {
+            return title.substring(0, TITLE_TRUNCATE) + "...";
+        } else {
+            return title;
+        }
+    }
+
+    private String compressContent(String content) {
+        if (content.length() > CONTENT_TRUNCATE) {
+            return content.substring(0, CONTENT_TRUNCATE) + "...";
+        } else {
+            return content;
+        }
     }
 
 }
