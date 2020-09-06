@@ -40,14 +40,14 @@ abstract class NewsRoomDatabase extends RoomDatabase {
         @Override
         public void onOpen(@NonNull SupportSQLiteDatabase db) {
             super.onOpen(db);
-
-            /*
-            databaseWriteExecutor.execute( () -> {
-                NewsDao dao = INSTANCE.newsDao();
-                dao.deleteALl();
-
-                //initialize news abstract list here
-            });*/
+            databaseWriteExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    NewsDao dao = INSTANCE.newsDao();
+                    dao.deleteAllNews();
+                    dao.deleteAllNewsList();
+                }
+            });
         }
     };
 }

@@ -25,7 +25,6 @@ public class NewsRepository {
         mNewsDao = db.newsDao();
         mGetNewsById = null;
         mGetNewsList = mNewsDao.getNewsList();
-        cached_mGetNewsList = new NewsList();
     }
 
     void flushNews() {
@@ -33,8 +32,11 @@ public class NewsRepository {
             @Override
             public void run() {
                 synchronized (db) {
-                    Log.v("debug", "before networkservice flush");
-                    mNewsDao.deleteAllNews();
+                    cached_mGetNewsList = mGetNewsList.getValue();
+                    if(cached_mGetNewsList == null) {
+                        cached_mGetNewsList = new NewsList();
+                    }
+                    Log.v("debug", "before networkservice flush, we have " + cached_mGetNewsList.list.size());
                     loaded_news_page_count = 0;
                     List<News> current_news = new ArrayList<News>();
                     while(true) {
@@ -59,22 +61,17 @@ public class NewsRepository {
                                 current_news.add(news);
                             }
                             current_news.addAll(cached_mGetNewsList.list);
-                            for(News news : cached_mGetNewsList.list) {
-                                mNewsDao.insert(news);
-                            }
                             break;
                         }
                     }
 
-                    cached_mGetNewsList = new NewsList();
-                    cached_mGetNewsList.list = current_news;
  /*                   int limit = Math.min(current_news.size(), NEWS_PER_PAGE);
                     //cached_mGetNewsList.list.addAll(current_news.subList(0,limit));
 
                     for (int i = 0; i < limit; ++i) {
                         cached_mGetNewsList.insert(current_news.get(i));
                     }*/
-
+                    cached_mGetNewsList.list = current_news;
                     mNewsDao.deleteAllNewsList();
                     mNewsDao.insert(cached_mGetNewsList);
                  //   loaded_news_page_count = 1;
@@ -105,14 +102,15 @@ public class NewsRepository {
             @Override
             public void run() {
                 synchronized (db) {
-                    int cnt = (cached_mGetNewsList.list.size() + NEWS_PER_PAGE - 1) / NEWS_PER_PAGE;
+                    cached_mGetNewsList = mGetNewsList.getValue();
 
-                    Log.v("debug", "pos="+cnt);
+                    int cnt = (cached_mGetNewsList.list.size() + NEWS_PER_PAGE - 1) / NEWS_PER_PAGE;
+                    Log.v("debug", "before get new, we have " + cached_mGetNewsList.list.size() + " in total, and page number is " + cnt);
+
                     List<News> current_news = new RemoteServiceManager(NEWS_PER_PAGE, cnt).flushNews("news");
 
                     while(!isAchieveCachedLast(current_news)) {
                         current_news = new RemoteServiceManager(NEWS_PER_PAGE, ++cnt).flushNews("news");
-                        Log.v("debug", "pos="+cnt);
                     }
                     int begin_pos = -1;
                     for(int i = 0; i < current_news.size(); ++i) {
@@ -121,13 +119,15 @@ public class NewsRepository {
                             break;
                         }
                     }
-                    Log.v("debug","begin_pos="+begin_pos+" size="+current_news.size());
                     if(begin_pos < 0) {
                         Log.v("debug", "ERROR when getMoreNews");
                     }
                     if(begin_pos == current_news.size()) {
                         current_news = new RemoteServiceManager(NEWS_PER_PAGE, ++cnt).flushNews("news");
                         begin_pos = 0;
+                    }
+                    for(int i = begin_pos; i < current_news.size(); ++i) {
+                        mNewsDao.insert(current_news.get(i));
                     }
                     cached_mGetNewsList.append(current_news.subList(begin_pos,current_news.size()));
                     mNewsDao.deleteAllNewsList();
