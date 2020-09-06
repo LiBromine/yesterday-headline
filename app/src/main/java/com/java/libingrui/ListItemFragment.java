@@ -1,26 +1,18 @@
 package com.java.libingrui;
 
 
-import android.app.AppComponentFactory;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,10 +21,7 @@ import com.aspsine.swipetoloadlayout.OnLoadMoreListener;
 import com.aspsine.swipetoloadlayout.OnRefreshListener;
 import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import android.util.Log;
 
 // Instances of this class are fragments representing a single
 // object in our collection.
@@ -40,13 +29,18 @@ public class ListItemFragment extends Fragment implements OnRefreshListener, OnL
     public static final String POSITION = "position";
     public static final String CATEGORY = "category";
 
-    private RecyclerView recyclerView;
-    private SwipeToLoadLayout swipeToLoadLayout;
+    RecyclerView recyclerView;
+    SwipeToLoadLayout swipeToLoadLayout;
     private ListItemViewAdapter rAdapter;
     private RecyclerView.LayoutManager rLayoutManager;
     private NewsViewModel mViewModel;
     private NewsList data;
     private String category;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Nullable
     @Override
@@ -57,9 +51,9 @@ public class ListItemFragment extends Fragment implements OnRefreshListener, OnL
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        initSwipeView(view);
         initRecycler(view);
         initViewModel(view);
+        initSwipeView(view);
     }
 
     public void initSwipeView(View view) {
@@ -67,6 +61,7 @@ public class ListItemFragment extends Fragment implements OnRefreshListener, OnL
         swipeToLoadLayout.setOnRefreshListener(this);
         swipeToLoadLayout.setOnLoadMoreListener(this);
         autoRefresh();
+        Log.v("debug", "hahah");
     }
 
     public void initRecycler(View view) {
@@ -75,11 +70,11 @@ public class ListItemFragment extends Fragment implements OnRefreshListener, OnL
         Integer tmp = args.getInt(POSITION);
         category = args.getString(CATEGORY);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.news_brief_list_view);
-        recyclerView.setHasFixedSize(true);
-
+        recyclerView = (RecyclerView) view.findViewById(R.id.swipe_target);
+//        recyclerView.setHasFixedSize(true);
         rLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(rLayoutManager);
+        Log.v("recyclerView", recyclerView.getWidth() + " " + recyclerView.getHeight());
 
         rAdapter = new ListItemViewAdapter(getContext());
         rAdapter.setOnItemClickListener(new ListItemViewAdapter.OnItemClickListener() {
@@ -105,8 +100,11 @@ public class ListItemFragment extends Fragment implements OnRefreshListener, OnL
             @Override
             public void onChanged(@Nullable final NewsList newsList) {
                 // Update the cached copy of the words in the adapter.
-                data = newsList;
-                rAdapter.setNewsList(data);
+                if (newsList != null)  {
+                    Log.v("debug", "onChanged starts");
+                    data = newsList;
+                    rAdapter.setNewsList(data);
+                }
             }
         });
 
@@ -114,6 +112,7 @@ public class ListItemFragment extends Fragment implements OnRefreshListener, OnL
 
     @Override
     public void onLoadMore() {
+        mViewModel.getMoreNews();
         swipeToLoadLayout.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -124,6 +123,8 @@ public class ListItemFragment extends Fragment implements OnRefreshListener, OnL
 
     @Override
     public void onRefresh() {
+        mViewModel.flushNews();
+        Log.v("onRefresh", "Refreshing");
         swipeToLoadLayout.postDelayed(new Runnable() {
             @Override
             public void run() {

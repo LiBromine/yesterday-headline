@@ -17,8 +17,10 @@ public class NewsRepository {
 
     private int loaded_news_page_count = 0;
 
+    private NewsRoomDatabase db;
+
     NewsRepository(Application application) {
-        NewsRoomDatabase db = NewsRoomDatabase.getDatabase(application);
+        db = NewsRoomDatabase.getDatabase(application);
         mNewsDao = db.newsDao();
         mGetNewsById = null;
         mGetNewsList = mNewsDao.getNewsList();
@@ -28,25 +30,27 @@ public class NewsRepository {
         NewsRoomDatabase.databaseWriteExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                List<News> current_news = new RemoteServiceManager(NEWS_PER_PAGE).flushNews("news");
-                mNewsDao.deleteAllNews();
-                for(int i = 0; i < current_news.size(); ++i) {
-                    News news = current_news.get(i);
-                    news.pageNumber = (i + NEWS_PER_PAGE - 1) / NEWS_PER_PAGE;
-                    mNewsDao.insert(news);
+                synchronized (db) {
+                    List<News> current_news = new RemoteServiceManager(NEWS_PER_PAGE).flushNews("news");
+                    mNewsDao.deleteAllNews();
+                    for (int i = 0; i < current_news.size(); ++i) {
+                        News news = current_news.get(i);
+                        news.pageNumber = (i + NEWS_PER_PAGE - 1) / NEWS_PER_PAGE;
+                        mNewsDao.insert(news);
+                    }
+
+                    cached_mGetNewsList = new NewsList();
+                    int limit = Math.min(current_news.size(), NEWS_PER_PAGE);
+                    //cached_mGetNewsList.list.addAll(current_news.subList(0,limit));
+
+                    for (int i = 0; i < limit; ++i) {
+                        cached_mGetNewsList.insert(current_news.get(i));
+                    }
+
+                    mNewsDao.deleteAllNewsList();
+                    mNewsDao.insert(cached_mGetNewsList);
+                    loaded_news_page_count = 1;
                 }
-
-                cached_mGetNewsList = new NewsList();
-                int limit = Math.min(current_news.size(), NEWS_PER_PAGE);
-                //cached_mGetNewsList.list.addAll(current_news.subList(0,limit));
-
-                for(int i = 0; i < limit; ++i) {
-                    cached_mGetNewsList.insert(current_news.get(i));
-                }
-
-                mNewsDao.deleteAllNewsList();
-                mNewsDao.insert(cached_mGetNewsList);
-                loaded_news_page_count = 1;
             }
         });
     }
@@ -55,11 +59,14 @@ public class NewsRepository {
         NewsRoomDatabase.databaseWriteExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                ++loaded_news_page_count;
-                List<News> current_news = mNewsDao.getNewsByPageNumber(loaded_news_page_count);
-                cached_mGetNewsList.append(current_news);
-                mNewsDao.deleteAllNewsList();
-                mNewsDao.insert(cached_mGetNewsList);
+                synchronized (db) {
+                    Log.v("debug", "getmore" + loaded_news_page_count);
+                    ++loaded_news_page_count;
+                    List<News> current_news = mNewsDao.getNewsByPageNumber(loaded_news_page_count);
+                    cached_mGetNewsList.append(current_news);
+                    mNewsDao.deleteAllNewsList();
+                    mNewsDao.insert(cached_mGetNewsList);
+                }
             }
         });
     }
