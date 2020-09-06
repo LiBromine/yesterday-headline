@@ -1,5 +1,6 @@
 package com.java.libingrui;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverter;
@@ -16,12 +17,14 @@ import android.util.Log;
 @Entity
 @TypeConverters(ListOfNewsConverter.class)
 public class NewsList {
-    @PrimaryKey(autoGenerate = true)
-    public int _id;
+    @NonNull
+    @PrimaryKey
+    public String type;
 
     public List<News> list;
 
-    NewsList(){
+    NewsList(@NonNull  String type){
+        this.type = type;
         list = new ArrayList<News>();
     }
 
