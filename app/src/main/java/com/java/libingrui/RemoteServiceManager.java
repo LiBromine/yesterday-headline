@@ -33,12 +33,13 @@ public class RemoteServiceManager {
                 Pagination pagination = api_events_list.pagination;
                 int NUMBER_OF_PAGE = (pagination.total + NEWS_PER_PAGE - 1) / NEWS_PER_PAGE;
                 result.addAll(api_events_list.data);
-      /*          for(int i = 2; i <= NUMBER_OF_PAGE; ++i) {
+                //TODO modify here, change NUMBER_OF_PAGE to 4 for debug
+                for(int i = 2; i <= NUMBER_OF_PAGE; ++i) {
                     url = base_url + "?type=" + type + "&page=" + i + "&size=" + NEWS_PER_PAGE;
                     json = remoteGET(url);
                     api_events_list = gson.fromJson(json, API_EVENTS_LIST.class);
                     result.addAll(api_events_list.data);
-                }*/
+                }
             }
         }
         return result;
