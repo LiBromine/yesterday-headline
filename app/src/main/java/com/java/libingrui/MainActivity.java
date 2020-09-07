@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModelProvider;
 import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
+import android.transition.Fade;
+import android.transition.Slide;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -43,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
         }
         initListCollectionFragment();
         initToolbar();
+
+        setupWindowAnimations();
     }
 
     public void initListCollectionFragment() {
@@ -67,6 +71,13 @@ public class MainActivity extends AppCompatActivity {
         // One of the group items (using the onClick attribute) was clicked
         // The item parameter passed here indicates which item it is
         // All other menu item clicks are handled by <code><a href="/reference/android/app/Activity.html#onOptionsItemSelected(android.view.MenuItem)">onOptionsItemSelected()</a></code>
+    }
+
+    private void setupWindowAnimations() {
+        Fade fade = new Fade();
+        fade.setDuration(1000);
+//        getWindow().setEnterTransition(fade);
+        getWindow().setExitTransition(fade);
     }
 }
 

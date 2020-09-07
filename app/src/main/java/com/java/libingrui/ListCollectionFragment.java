@@ -2,6 +2,8 @@ package com.java.libingrui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.transition.Fade;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +30,8 @@ public class ListCollectionFragment extends Fragment {
     CollectionAdapter adapter;
     ViewPager2 viewPager;
     private NewsViewModel mViewModel;
-    private ArrayList<String> categoryList; // TODO
+    private ArrayList<String> categoryList;
+    private ArrayList<String> uncategoryList;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,6 +61,7 @@ public class ListCollectionFragment extends Fragment {
 //        });
 
         initCategoryButton(view);
+        setupWindowAnimations();
     }
 
     public void initCategory() {
@@ -66,6 +70,12 @@ public class ListCollectionFragment extends Fragment {
             categoryList = new ArrayList<>();
             categoryList.add("news");
             categoryList.add("paper");
+        }
+        if (uncategoryList == null) {
+            uncategoryList = new ArrayList<>();
+            uncategoryList.add("covid");
+            uncategoryList.add("graph");
+            uncategoryList.add("scholar");
         }
 //        adapter.setCategoryList(categoryList);
     }
@@ -94,8 +104,8 @@ public class ListCollectionFragment extends Fragment {
             public void onClick(View view) {
 //                TODO
                 Intent intent = new Intent(getContext(), TypeActivity.class);
-                final String CATEGORY = "category";
-                intent.putExtra(CATEGORY, categoryList);
+                intent.putExtra(TypeActivity.TYPE_IN, categoryList);
+                intent.putExtra(TypeActivity.TYPE_OUT, uncategoryList);
                 startActivityForResult(intent, 23);
                 Toast.makeText(getContext(), R.string.test, Toast.LENGTH_SHORT).show();
             }
@@ -105,7 +115,22 @@ public class ListCollectionFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 23) {
-            // TODO, change the category identifier
+            // TODO, change the db
+            categoryList = data.getStringArrayListExtra(TypeActivity.TYPE_IN);
+            uncategoryList = data.getStringArrayListExtra(TypeActivity.TYPE_OUT);
+            Log.v("debug", "TypeActivityFinish, typeIn is " + categoryList);
+            initViewPagerAndTabLayout(getView());
+
+            if (resultCode != -1) {
+                viewPager.setCurrentItem(resultCode);
+            }
         }
+    }
+
+    private void setupWindowAnimations() {
+        Fade fade = new Fade();
+        fade.setDuration(1000);
+//        getWindow().setEnterTransition(fade);
+        getActivity().getWindow().setExitTransition(fade);
     }
 }
