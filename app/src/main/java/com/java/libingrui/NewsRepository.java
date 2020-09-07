@@ -494,6 +494,7 @@ public class NewsRepository {
                     for(EntityDetails item : entityDetailsList) {
                         entity_urls.add(item.url);
                     }
+                    entity_urls.add(keyword);
 
                     List<String> ref_news_id_list = mNewsDao.getNewsIdByEntity(entity_urls);
                     for(String id : ref_news_id_list) {
@@ -537,6 +538,14 @@ public class NewsRepository {
             ref.news_id = news._id;
             ref.url = entity.url;
             mNewsDao.insert(ref);
+
+            NewsEntityCrossRef ref2 = new NewsEntityCrossRef();
+            ref2.url = entity.label;
+            ref2.news_id = news._id;
+            mNewsDao.insert(ref2);
+
+            Log.v("debug", "add " + ref.url + ref.news_id);
+            Log.v("debug", "add " + ref2.url + ref2.news_id);
         }
         mNewsDao.insert(news);
     }
