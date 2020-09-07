@@ -169,6 +169,8 @@ public class NewsRepository {
                                 if(cached_mGetNewsList.list.size() > 0 && news._id.equals(cached_mGetNewsList.list.get(0)._id)) {
                                     break;
                                 }
+                                Log.v("debug", "flushNews else " + cached_mGetNewsList.list.size() + " i=" + i + "type=" + news.type + "title=" + news.title) ;
+                                Log.v("debug", "news_id=" + news._id);
                                 mNewsDao.insert(news);
                                 current_news.add(news);
                             }

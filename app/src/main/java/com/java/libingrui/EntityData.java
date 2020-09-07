@@ -2,12 +2,18 @@ package com.java.libingrui;
 
 import android.graphics.Bitmap;
 
+import androidx.annotation.NonNull;
 import androidx.room.Embedded;
 import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
-@Entity
+@Entity(primaryKeys = {"url"})
 public class EntityData {
     @Embedded
+    @NonNull
     public EntityDetails entityDetails;
+    @Ignore
     public Bitmap bitmap;
+    //TODO cannot ignore bitmap
 }

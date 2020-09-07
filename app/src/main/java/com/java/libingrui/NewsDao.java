@@ -3,6 +3,7 @@ package com.java.libingrui;
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
 import androidx.room.Update;
@@ -12,7 +13,7 @@ import java.util.List;
 @Dao
 public interface NewsDao {
     //----------------News----------------
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(News news);
 
     @Query("SELECT * from News where News._id LIKE :target_id")

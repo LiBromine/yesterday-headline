@@ -1,7 +1,9 @@
 package com.java.libingrui;
 
+import androidx.annotation.NonNull;
 import androidx.room.Embedded;
 import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import java.util.List;
@@ -16,5 +18,7 @@ public class EntityDetails {
     public String label;
     public List<String> related_events;
     public String source;
+    @NonNull
+    @PrimaryKey
     public String url;
 }
