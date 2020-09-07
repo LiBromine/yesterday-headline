@@ -19,6 +19,8 @@ public class NewsViewModel extends AndroidViewModel {
 
     private LiveData<News> mGetSelectedNews;
 
+    private LiveData<EntityData> mGetSelectedEntityData;
+
     private LiveData<List<String>> mCountryList;
     private LiveData<List<String>> mSelectedProvince;
     private LiveData<List<String>> mSelectedCounty;
@@ -36,6 +38,8 @@ public class NewsViewModel extends AndroidViewModel {
         mWatchedList = mRepository.getWatchedList();
 
         mGetSelectedNews = mRepository.getSelectedNews();
+
+        mGetSelectedEntityData = mRepository.getSelectedEntityData();
 
         mCountryList = mRepository.getCountryList();
         mSelectedProvince = mRepository.getSelectedProvince();
@@ -122,6 +126,10 @@ public class NewsViewModel extends AndroidViewModel {
         mRepository.getNewsById(target_id);
     }
 
+    void getEntityDataByUrl(String url) {
+        mRepository.getEntityDataByUrl(url);
+    }
+
     void getWatchedNews() {
         mRepository.getWatchedNews();
     }
@@ -132,5 +140,9 @@ public class NewsViewModel extends AndroidViewModel {
 
     LiveData<News> Var_getSelectedNews() {
         return mGetSelectedNews;
+    }
+
+    LiveData<EntityData> getSelectedEntityData() {
+        return mGetSelectedEntityData;
     }
 }
