@@ -507,13 +507,15 @@ public class NewsRepository {
                     }
                     NewsList list = mNewsDao.getNewsListByType("search");
                     if(list != null) {
+                        Log.v("debug", "in if");
                         list.list = relatedNews;
                         mNewsDao.updateNewsList(list);
                     }
                     else {
+                        Log.v("debug", "in else");
                         list = new NewsList("search");
                         list.list = relatedNews;
-                        mNewsDao.updateNewsList(list);
+                        mNewsDao.insert(list);
                     }
                 }
             }
