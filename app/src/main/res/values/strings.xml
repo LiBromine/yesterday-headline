@@ -9,8 +9,15 @@
     <string name="clear_cache">清除缓存</string>
     <string name="wechat">微信</string>
     <string name="sina">新浪</string>
+
+
+    <!--    type relevant -->
     <string name="edit">编辑</string>
     <string name="done">完成</string>
+    <string name="type_in">我的频道</string>
+    <string name="type_in_detail">点击进入频道</string>
+    <string name="type_out">为你推荐</string>
+    <string name="type_out_detail">点击添加频道</string>
 
     <!--    test string -->
     <string name="test">Test Output</string>

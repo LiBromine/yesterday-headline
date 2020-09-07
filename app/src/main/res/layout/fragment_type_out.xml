@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/fragment_type_out"
+    android:orientation="vertical"
+    tools:context=".TypeActivity">
+
+    <LinearLayout
+        android:id="@+id/arr_del_channel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="50dp"
+        android:paddingBottom="30dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/grid1">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="@string/type_out"
+            android:textSize="30sp"
+            android:textColor="@color/myBlack"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@string/type_out_detail"
+            android:gravity="center_horizontal|center_vertical"
+            android:textColor="@color/myGray"
+            android:textSize="15sp" />
+
+
+    </LinearLayout>
+
+    <com.java.libingrui.MyGridLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:id="@+id/grid2"
+        android:columnCount="4"
+        app:layout_constraintTop_toBottomOf="@+id/arr_del_channel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
+    </com.java.libingrui.MyGridLayout>
+
+</LinearLayout>
