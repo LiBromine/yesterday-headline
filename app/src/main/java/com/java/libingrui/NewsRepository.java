@@ -280,6 +280,15 @@ public class NewsRepository {
                     current_news.selected = 1;
                     current_news.is_watched = 1;
                     mNewsDao.updateNews(current_news);
+                    String type = current_news.type;
+                    NewsList fatherList = mNewsDao.getNewsListByType(type);
+                    for(int i = 0; i < fatherList.list.size(); ++i) {
+                        if(fatherList.list.get(i)._id.equals(current_news._id)) {
+                            fatherList.list.get(i).is_watched = 1;
+                            break;
+                        }
+                    }
+                    mNewsDao.insert(fatherList);
                 }
             }
         });
