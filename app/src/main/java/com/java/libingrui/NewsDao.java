@@ -45,7 +45,7 @@ public interface NewsDao {
     void deleteAllNewsEntityCrossRef();
 
     //------------NewsList---------------
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(NewsList newslist);
 
     @Query("DELETE from NewsList")

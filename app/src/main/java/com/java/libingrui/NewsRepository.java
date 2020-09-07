@@ -280,6 +280,15 @@ public class NewsRepository {
                     current_news.selected = 1;
                     current_news.is_watched = 1;
                     mNewsDao.updateNews(current_news);
+                    String type = current_news.type;
+                    NewsList fatherList = mNewsDao.getNewsListByType(type);
+                    for(int i = 0; i < fatherList.list.size(); ++i) {
+                        if(fatherList.list.get(i)._id.equals(current_news._id)) {
+                            fatherList.list.get(i).is_watched = 1;
+                            break;
+                        }
+                    }
+                    mNewsDao.insert(fatherList);
                 }
             }
         });
@@ -485,6 +494,7 @@ public class NewsRepository {
                     for(EntityDetails item : entityDetailsList) {
                         entity_urls.add(item.url);
                     }
+                    entity_urls.add(keyword);
 
                     List<String> ref_news_id_list = mNewsDao.getNewsIdByEntity(entity_urls);
                     for(String id : ref_news_id_list) {
@@ -507,10 +517,12 @@ public class NewsRepository {
                     }
                     NewsList list = mNewsDao.getNewsListByType("search");
                     if(list != null) {
+                        Log.v("debug", "in if");
                         list.list = relatedNews;
                         mNewsDao.updateNewsList(list);
                     }
                     else {
+                        Log.v("debug", "in else");
                         list = new NewsList("search");
                         list.list = relatedNews;
                         mNewsDao.insert(list);
@@ -526,6 +538,14 @@ public class NewsRepository {
             ref.news_id = news._id;
             ref.url = entity.url;
             mNewsDao.insert(ref);
+
+            NewsEntityCrossRef ref2 = new NewsEntityCrossRef();
+            ref2.url = entity.label;
+            ref2.news_id = news._id;
+            mNewsDao.insert(ref2);
+
+            Log.v("debug", "add " + ref.url + ref.news_id);
+            Log.v("debug", "add " + ref2.url + ref2.news_id);
         }
         mNewsDao.insert(news);
     }
