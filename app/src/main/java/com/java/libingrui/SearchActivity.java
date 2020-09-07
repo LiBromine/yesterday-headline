@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.transition.Slide;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +53,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onChanged(NewsList newsList) {
                 if (newsList != null) {
+                    Log.v("debug", "search list size ="+newsList.list.size());
                     mNewsList = newsList;
                     mAdapter.setNewsList(mNewsList);
                 }

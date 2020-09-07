@@ -39,14 +39,12 @@ public class MainActivity extends AppCompatActivity {
 
     private NewsViewModel mNewsViewModel;
     private SearchView searchView;
-    ActivityOptionsCompat options;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         app = getApplication();
-        options = ActivityOptionsCompat.makeSceneTransitionAnimation(MainActivity.this);
         if (savedInstanceState != null) {
             return;
         }
@@ -93,9 +91,10 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
+                searchView.setIconified(true);
                 Intent i = new Intent(MainActivity.this, SearchActivity.class);
                 i.putExtra(QUERY, s);
-                startActivity(i, options.toBundle());
+                startActivity(i);
                 return true;
             }
 

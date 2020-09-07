@@ -513,7 +513,7 @@ public class NewsRepository {
                     else {
                         list = new NewsList("search");
                         list.list = relatedNews;
-                        mNewsDao.updateNewsList(list);
+                        mNewsDao.insert(list);
                     }
                 }
             }
