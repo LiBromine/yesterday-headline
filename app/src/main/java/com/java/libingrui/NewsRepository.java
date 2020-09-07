@@ -466,10 +466,13 @@ public class NewsRepository {
                 List<News> relatedNews = new ArrayList<News>();
                 Set<String> event_ids = new HashSet<String>();
                 for(EntityDetails entity : entityDetailsList) {
-                    for(String event_id : entity.related_events) {
-                        event_ids.add(event_id);
+                    if(entity.related_events != null) {
+                        for (String event_id : entity.related_events) {
+                            event_ids.add(event_id);
+                        }
                     }
                 }
+
                 for(String event_id : event_ids) {
                     News current_news = remoteServiceManager.getNewsById(event_id);
                     if(current_news != null) {
@@ -478,6 +481,7 @@ public class NewsRepository {
                 }
 
                 synchronized (db) {
+                    Log.v("debug", "search result size=" + relatedNews.size());
                     for(News news : relatedNews) {
                         mNewsDao.insert(news);
                     }
