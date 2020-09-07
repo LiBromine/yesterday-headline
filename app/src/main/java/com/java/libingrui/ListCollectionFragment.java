@@ -119,9 +119,10 @@ public class ListCollectionFragment extends Fragment {
             categoryList = data.getStringArrayListExtra(TypeActivity.TYPE_IN);
             uncategoryList = data.getStringArrayListExtra(TypeActivity.TYPE_OUT);
             Log.v("debug", "TypeActivityFinish, typeIn is " + categoryList);
-            adapter.setCategoryList(categoryList);
+            initViewPagerAndTabLayout(getView());
+
             if (resultCode != -1) {
-                viewPager.setCurrentItem(requestCode);
+                viewPager.setCurrentItem(resultCode);
             }
         }
     }

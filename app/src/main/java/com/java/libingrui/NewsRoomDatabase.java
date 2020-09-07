@@ -10,6 +10,7 @@ import android.content.Context;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import android.util.Log;
 
 @Database(entities = {News.class, NewsList.class, EpidemicInfo.class}, version = 1, exportSchema = false)
 abstract class NewsRoomDatabase extends RoomDatabase {
@@ -24,6 +25,7 @@ abstract class NewsRoomDatabase extends RoomDatabase {
 
     static NewsRoomDatabase getDatabase(final Context context) {
         if( INSTANCE == null) {
+            Log.v("debug","new db");
             synchronized (NewsRoomDatabase.class) {
                 if( INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
@@ -43,6 +45,7 @@ abstract class NewsRoomDatabase extends RoomDatabase {
             databaseWriteExecutor.execute(new Runnable() {
                 @Override
                 public void run() {
+                    Log.v("debug","db callback");
                     NewsDao dao = INSTANCE.newsDao();
                     dao.deleteAllNews();
                     dao.deleteAllNewsList();
