@@ -88,6 +88,24 @@ public class NewsViewModel extends AndroidViewModel {
         mRepository.getEpidemicInfoByRegionName(country, province, county);
     }
 
+    void getEpidemicInfoByRegionNameWithTimeLimit(String country, String province, String county, int begin_year, int begin_month, int begin_day, int end_year, int end_month, int end_day) {
+        int begin_value = begin_year * 10000 + begin_month * 100 + begin_day;
+        int end_value = end_year * 10000 + end_month * 100 + end_day;
+        mRepository.getEpidemicInfoByRegionNameWithTimeLimit(country,province,county,begin_value,end_value);
+    }
+
+    void getEpidemicInfoOfCountries() {
+        mRepository.getEpidemicInfoOfCountries();
+    }
+
+    void getEpidemicInfoByCountryOfProvinces(String country) {
+        mRepository.getEpidemicInfoByCountryOfProvinces(country);
+    }
+
+    void getEpidemicInfoByProvinceOfCounties(String country, String province) {
+        mRepository.getEpidemicInfoByProvinceOfCounties(country,province);
+    }
+
     void updateEpidemicData() {
         mRepository.updateEpidemicData();
     }

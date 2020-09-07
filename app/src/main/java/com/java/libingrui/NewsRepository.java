@@ -376,6 +376,86 @@ public class NewsRepository {
         });
     }
 
+    void getEpidemicInfoByRegionNameWithTimeLimit(final String country, final String province, final String county, final int begin_time, final int end_time) {
+        NewsRoomDatabase.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (db) {
+                    List<EpidemicInfo> list = mNewsDao.getNormalSelectedEpidemicInfo();
+                    for(EpidemicInfo item : list) {
+                        item.selected = 0;
+                        mNewsDao.updateEpidemicInfo(item);
+                    }
+                    List<EpidemicInfo> current_info = mNewsDao.getEpidemicInfoByRegionNameWithTimeLimit(country,province,county,begin_time,end_time);
+                    for(EpidemicInfo item : current_info) {
+                        item.selected = 1;
+                        mNewsDao.updateEpidemicInfo(item);
+                    }
+                }
+            }
+        });
+    }
+
+    void getEpidemicInfoOfCountries() {
+        NewsRoomDatabase.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (db) {
+                    List<EpidemicInfo> list = mNewsDao.getNormalSelectedEpidemicInfo();
+                    for(EpidemicInfo item : list) {
+                        item.selected = 0;
+                        mNewsDao.updateEpidemicInfo(item);
+                    }
+                    List<EpidemicInfo> current_info = mNewsDao.getEpidemicInfoOfCountries();
+                    for(EpidemicInfo item : current_info) {
+                        item.selected = 1;
+                        mNewsDao.updateEpidemicInfo(item);
+                    }
+                }
+            }
+        });
+    }
+
+    void getEpidemicInfoByCountryOfProvinces(final String country) {
+        NewsRoomDatabase.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (db) {
+                    List<EpidemicInfo> list = mNewsDao.getNormalSelectedEpidemicInfo();
+                    for (EpidemicInfo item : list) {
+                        item.selected = 0;
+                        mNewsDao.updateEpidemicInfo(item);
+                    }
+                    List<EpidemicInfo> current_info = mNewsDao.getEpidemicInfoByCountryOfProvinces(country);
+                    for (EpidemicInfo item : current_info) {
+                        item.selected = 1;
+                        mNewsDao.updateEpidemicInfo(item);
+                    }
+                }
+            }
+        });
+    }
+
+    void getEpidemicInfoByProvinceOfCounties(final String country, final String province) {
+        NewsRoomDatabase.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (db) {
+                    List<EpidemicInfo> list = mNewsDao.getNormalSelectedEpidemicInfo();
+                    for (EpidemicInfo item : list) {
+                        item.selected = 0;
+                        mNewsDao.updateEpidemicInfo(item);
+                    }
+                    List<EpidemicInfo> current_info = mNewsDao.getEpidemicInfoByProvinceOfCounties(country,province);
+                    for (EpidemicInfo item : current_info) {
+                        item.selected = 1;
+                        mNewsDao.updateEpidemicInfo(item);
+                    }
+                }
+            }
+        });
+    }
+
     void searchNewsByKeyword(final String keyword) {
         NewsRoomDatabase.databaseWriteExecutor.execute(new Runnable() {
             @Override

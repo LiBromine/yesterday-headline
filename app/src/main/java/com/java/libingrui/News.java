@@ -111,24 +111,6 @@ class ListOfAuthorConverter {
     }
 }
 
-class ListOfStringConverter {
-    @TypeConverter
-    public String ObjectToString(List<String> list) {
-        Gson gson = new Gson();
-        return gson.toJson(list);
-    }
-
-    @TypeConverter
-    public List<String> StringToObject(String str) {
-        Gson gson = new Gson();
-        List<String> result;
-        String[] tmp = gson.fromJson(str, String[].class);
-        result = new ArrayList<String>();
-        Collections.addAll(result, tmp);
-        return result;
-    }
-}
-
 class ListOfRelatedEventConverter {
     @TypeConverter
     public String ObjectToString(List<RelatedEvent> list) {

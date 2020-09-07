@@ -58,6 +58,14 @@ public interface NewsDao {
     @Query("SELECT * from NewsList where type='watched'")
     LiveData<NewsList> getWatchedList();
 
+    //------------EntityData--------------
+    @Insert
+    void insert(EntityData data);
+
+    @Query("DELETE  from EntityData")
+    void deleteAllEntityData();
+    //todo more method about EntityData
+
     //------------EpidemicInfo------------
     @Insert
     void insert(EpidemicInfo info);
@@ -81,6 +89,15 @@ public interface NewsDao {
             " and county like :target_county and timeValue >= :beginTime and timeValue < :endTime")
     List<EpidemicInfo> getEpidemicInfoByRegionNameWithTimeLimit(String target_country, String target_province, String target_county,
                                                                 int beginTime, int endTime);
+
+    @Query("SELECT * from EpidemicInfo where province='total' and county='total'")
+    List<EpidemicInfo> getEpidemicInfoOfCountries();
+
+    @Query("SELECT * from EpidemicInfo where country like:target_country and county='total'")
+    List<EpidemicInfo> getEpidemicInfoByCountryOfProvinces(String target_country);
+
+    @Query("SELECT * from EpidemicInfo where country like:target_country and province like:target_province")
+    List<EpidemicInfo> getEpidemicInfoByProvinceOfCounties(String target_country, String target_province);
 
     @Query("SELECT * from EpidemicInfo where selected = 1")
     LiveData<List<EpidemicInfo>> getSelectedEpidemicInfo();
