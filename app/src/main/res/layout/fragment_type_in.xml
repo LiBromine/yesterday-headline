@@ -31,7 +31,8 @@
             android:layout_height="match_parent"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
-            android:text="@string/type_in_detail"
+            android:id="@+id/text_type_explain"
+            android:text="@string/edit_explain"
             android:gravity="center_horizontal|center_vertical"
             android:textColor="@color/myGray"
             android:textSize="15sp" />

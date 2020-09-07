@@ -11,13 +11,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class TypeInGridFragment extends Fragment {
     private static String editViewText = "编辑";
+    private static String editViewTextExplain = "点击进入频道";
     private MyGridLayout grid;
     private TextView editView;
+    private TextView editViewExplain;
     private OnItemClickListener onItemClickListener;
     private List<String> data;
 
@@ -72,17 +76,24 @@ public class TypeInGridFragment extends Fragment {
 
     public void initEditButton(View view) {
         editView = view.findViewById(R.id.text_type_edit);
+        editViewExplain = view.findViewById(R.id.text_type_explain);
         editView.setText(editViewText);
+        editViewExplain.setText(editViewTextExplain);
+
         editView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 TextView tmp = (TextView) view;
+                TextView explain = getView().findViewById(R.id.text_type_explain);
                 if (tmp.getText().toString().equals(getString(R.string.edit))) {
                     tmp.setText(R.string.done);
+                    explain.setText("");
                     editViewText = getString(R.string.done);
+                    editViewTextExplain = getString(R.string.done_explain);
                 } else {
                     tmp.setText(R.string.edit);
                     editViewText = getString(R.string.edit);
+                    editViewTextExplain = getString(R.string.edit_explain);
                 }
             }
         });

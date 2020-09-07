@@ -121,8 +121,8 @@ public class TypeActivity extends AppCompatActivity {
         @Override
         public void onItemClick(View v) {
             TextView editView = findViewById(R.id.text_type_edit);
+            String type = ((TextView)v).getText().toString();
             if (!editView.getText().toString().equals(getString(R.string.edit))) {
-                String type = ((TextView)v).getText().toString();
                 typeIn.remove(type);
                 typeOut.add(type);
 
@@ -136,7 +136,11 @@ public class TypeActivity extends AppCompatActivity {
 
 
             } else {
-//                     TODO
+                Intent intent = getIntent();
+                intent.putExtra(TYPE_IN, typeIn);
+                intent.putExtra(TYPE_OUT, typeOut);
+                setResult(typeIn.indexOf(type), intent);
+                finish();
             }
         }
     };

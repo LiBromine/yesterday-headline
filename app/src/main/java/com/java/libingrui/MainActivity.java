@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String ID = "id";
     public static final String QUERY = "query";
     public static Application app;
+    public static Context context;
 
     private NewsViewModel mNewsViewModel;
     private SearchView searchView;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        context = this;
         app = getApplication();
         if (savedInstanceState != null) {
             return;

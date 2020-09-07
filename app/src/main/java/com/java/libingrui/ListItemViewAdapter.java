@@ -74,6 +74,16 @@ public class ListItemViewAdapter extends RecyclerView.Adapter<ListItemViewAdapte
             holder.srcView.setText(source);
             holder.idView.setText(item._id);
 
+            if (item.is_watched == 1) {
+                holder.titleView.setTextColor(MainActivity.context.getColor(R.color.myGray));
+                holder.textView.setTextColor(MainActivity.context.getColor(R.color.myGray));
+                holder.srcView.setTextColor(MainActivity.context.getColor(R.color.myGray));
+            } else {
+                holder.titleView.setTextColor(MainActivity.context.getColor(R.color.myBlack));
+                holder.textView.setTextColor(MainActivity.context.getColor(R.color.myGray));
+                holder.srcView.setTextColor(MainActivity.context.getColor(R.color.myBlack));
+            }
+
         } else {
             holder.titleView.setText("No Title");
             holder.textView.setText("No text");

@@ -13,9 +13,10 @@
 
     <!--    type relevant -->
     <string name="edit">编辑</string>
+    <string name="edit_explain">点击进入频道</string>
+    <string name="done_explain">点击删除频道</string>
     <string name="done">完成</string>
     <string name="type_in">我的频道</string>
-    <string name="type_in_detail">点击进入频道</string>
     <string name="type_out">为你推荐</string>
     <string name="type_out_detail">点击添加频道</string>
 
