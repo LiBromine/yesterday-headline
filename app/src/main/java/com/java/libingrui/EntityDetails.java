@@ -19,6 +19,5 @@ public class EntityDetails {
     public List<String> related_events;
     public String source;
     @NonNull
-    @PrimaryKey
     public String url;
 }

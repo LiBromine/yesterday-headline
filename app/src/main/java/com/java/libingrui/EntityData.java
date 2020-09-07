@@ -13,7 +13,5 @@ public class EntityData {
     @Embedded
     @NonNull
     public EntityDetails entityDetails;
-    @Ignore
-    public Bitmap bitmap;
-    //TODO cannot ignore bitmap
+    public byte[] bitmap;
 }

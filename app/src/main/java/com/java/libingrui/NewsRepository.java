@@ -278,6 +278,7 @@ public class NewsRepository {
                     }
                     News current_news = mNewsDao.getNewsById(id);
                     current_news.selected = 1;
+                    current_news.is_watched = 1;
                     mNewsDao.updateNews(current_news);
                 }
             }
@@ -477,6 +478,9 @@ public class NewsRepository {
                 }
 
                 synchronized (db) {
+                    for(News news : relatedNews) {
+                        mNewsDao.insert(news);
+                    }
                     NewsList list = mNewsDao.getNewsListByType("search");
                     if(list != null) {
                         list.list = relatedNews;
