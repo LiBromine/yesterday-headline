@@ -27,6 +27,9 @@ public interface NewsDao {
     @Query("SELECT * from News where News.selected=1")
     List<News> getNormalSelectedNews();
 
+    @Query("SELECT * from News where News.is_watched=1")
+    List<News> getNormalWatchedNews();
+
     @Update
     void updateNews(News news);
 
@@ -51,6 +54,9 @@ public interface NewsDao {
 
     @Query("SELECT * from NewsList where type='search'")
     LiveData<NewsList> getSearchList();
+
+    @Query("SELECT * from NewsList where type='watched'")
+    LiveData<NewsList> getWatchedList();
 
     //------------EpidemicInfo------------
     @Insert

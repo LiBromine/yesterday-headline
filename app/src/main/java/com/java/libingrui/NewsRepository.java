@@ -4,6 +4,8 @@ import android.app.Application;
 import androidx.lifecycle.LiveData;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
@@ -20,6 +22,8 @@ public class NewsRepository {
     private LiveData<NewsList> mGetPaperList;
 
     private LiveData<NewsList> mGetSearchList;
+
+    private LiveData<NewsList> mGetWatchedList;
 
     private LiveData<List<String>> mCountryList;
     private LiveData<List<String>> mSelectedProvinceList;
@@ -41,6 +45,8 @@ public class NewsRepository {
         mGetPaperList = mNewsDao.getPaperList();
 
         mGetSearchList = mNewsDao.getSearchList();
+
+        mGetWatchedList = mNewsDao.getWatchedList();
 
         mCountryList = mNewsDao.getCountryList();
         mSelectedProvinceList = mNewsDao.getSelectedProvince();
@@ -74,6 +80,10 @@ public class NewsRepository {
 
     LiveData<NewsList> getSearchList() {
         return mGetSearchList;
+    }
+
+    LiveData<NewsList> getWatchedList() {
+        return mGetWatchedList;
     }
 
     LiveData<News> getSelectedNews() {
@@ -272,6 +282,38 @@ public class NewsRepository {
                 }
             }
         });
+    }
+
+    void getWatchedNews() {
+        NewsRoomDatabase.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (db) {
+                    List<News> list = mNewsDao.getNormalWatchedNews();
+                    for(int i = 0; i < list.size(); ++i) {
+                        list.get(i).myDate = DateManager.NewsStringToDate(list.get(i).date);
+                    }
+                    Collections.sort(list, new NewsValueComparatorByMyDate());
+                    NewsList newslist = mNewsDao.getNewsListByType("watched");
+                    if(newslist != null) {
+                        newslist.list = list;
+                        mNewsDao.updateNewsList(newslist);
+                    }
+                    else {
+                        NewsList cur = new NewsList("watched");
+                        cur.list = list;
+                        mNewsDao.insert(cur);
+                    }
+                }
+            }
+        });
+    }
+
+    static class NewsValueComparatorByMyDate implements Comparator<News> {
+        @Override
+        public int compare(News e1, News e2) {
+            return -1 * e1.myDate.compareTo(e2.myDate);
+        }
     }
 
     void getProvinceByCountry(final String country) {
