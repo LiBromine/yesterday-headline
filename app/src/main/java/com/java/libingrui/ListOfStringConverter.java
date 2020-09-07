@@ -21,7 +21,7 @@ class ListOfStringConverter {
         List<String> result;
         String[] tmp = gson.fromJson(str, String[].class);
         result = new ArrayList<String>();
-        Collections.addAll(result, tmp);
+        if(tmp != null) Collections.addAll(result, tmp);
         return result;
     }
 }

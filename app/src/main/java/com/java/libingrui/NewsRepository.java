@@ -159,7 +159,7 @@ public class NewsRepository {
                         if(!isAchieveCachedFirst(cached_mGetNewsList, append_news)) {
                             for (int i = 0; i < append_news.size(); ++i) {
                                 News news = append_news.get(i);
-                                mNewsDao.insert(news);
+                                savedInsertNews(news);
                             }
                             current_news.addAll(append_news);
                         }
@@ -169,7 +169,7 @@ public class NewsRepository {
                                 if(cached_mGetNewsList.list.size() > 0 && news._id.equals(cached_mGetNewsList.list.get(0)._id)) {
                                     break;
                                 }
-                                mNewsDao.insert(news);
+                                savedInsertNews(news);
                                 current_news.add(news);
                             }
                             current_news.addAll(cached_mGetNewsList.list);
@@ -249,7 +249,7 @@ public class NewsRepository {
                         begin_pos = 0;
                     }
                     for(int i = begin_pos; i < current_news.size(); ++i) {
-                        mNewsDao.insert(current_news.get(i));
+                        savedInsertNews(current_news.get(i));
                     }
                     cached_mGetNewsList.append(current_news.subList(begin_pos,current_news.size()));
 
@@ -472,18 +472,38 @@ public class NewsRepository {
                         }
                     }
                 }
-
+/*
                 for(String event_id : event_ids) {
                     News current_news = remoteServiceManager.getNewsById(event_id);
                     if(current_news != null) {
                         relatedNews.add(current_news);
                     }
                 }
-
+*/
                 synchronized (db) {
+                    List<String> entity_urls = new ArrayList<String>();
+                    for(EntityDetails item : entityDetailsList) {
+                        entity_urls.add(item.url);
+                    }
+
+                    List<String> ref_news_id_list = mNewsDao.getNewsIdByEntity(entity_urls);
+                    for(String id : ref_news_id_list) {
+                        event_ids.add(id);
+                    }
+
+                    for(String event_id : event_ids) {
+                        News news = mNewsDao.getNewsById(event_id);
+                        if(news == null) {
+                            news = remoteServiceManager.getNewsById(event_id);
+                        }
+                        if(news != null) {
+                            relatedNews.add(news);
+                        }
+                    }
+
                     Log.v("debug", "search result size=" + relatedNews.size());
                     for(News news : relatedNews) {
-                        mNewsDao.insert(news);
+                        savedInsertNews(news);
                     }
                     NewsList list = mNewsDao.getNewsListByType("search");
                     if(list != null) {
@@ -498,5 +518,15 @@ public class NewsRepository {
                 }
             }
         });
+    }
+
+    void savedInsertNews(News news) {
+        for(Entity entity : news.entities) {
+            NewsEntityCrossRef ref = new NewsEntityCrossRef();
+            ref.news_id = news._id;
+            ref.url = entity.url;
+            mNewsDao.insert(ref);
+        }
+        mNewsDao.insert(news);
     }
 }

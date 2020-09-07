@@ -34,6 +34,16 @@ public interface NewsDao {
     @Update
     void updateNews(News news);
 
+    //------------NewsEntityCrossRef----------
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insert(NewsEntityCrossRef item);
+
+    @Query("SELECT news_id from NewsEntityCrossRef where url in (:urls)")
+    List<String> getNewsIdByEntity(List<String> urls);
+
+    @Query("DELETE from NewsEntityCrossRef")
+    void deleteAllNewsEntityCrossRef();
+
     //------------NewsList---------------
     @Insert
     void insert(NewsList newslist);

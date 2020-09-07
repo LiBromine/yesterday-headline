@@ -70,7 +70,7 @@ class ListOfLiBrEntityConverter {
         List<com.java.libingrui.Entity> result;
         com.java.libingrui.Entity[] tmp = gson.fromJson(str, com.java.libingrui.Entity[].class);
         result = new ArrayList<com.java.libingrui.Entity>();
-        Collections.addAll(result, tmp);
+        if(tmp != null) Collections.addAll(result, tmp);
         return result;
     }
 }
@@ -88,7 +88,7 @@ class ListOfGeoInfoConverter {
         List<GeoInfo> result;
         GeoInfo[] tmp = gson.fromJson(str, GeoInfo[].class);
         result = new ArrayList<GeoInfo>();
-        Collections.addAll(result, tmp);
+        if(tmp != null) Collections.addAll(result, tmp);
         return result;
     }
 }
@@ -106,7 +106,7 @@ class ListOfAuthorConverter {
         List<Author> result;
         Author[] tmp = gson.fromJson(str, Author[].class);
         result = new ArrayList<Author>();
-        Collections.addAll(result, tmp);
+        if(tmp != null) Collections.addAll(result, tmp);
         return result;
     }
 }
@@ -124,7 +124,7 @@ class ListOfRelatedEventConverter {
         List<RelatedEvent> result;
         RelatedEvent[] tmp = gson.fromJson(str, RelatedEvent[].class);
         result = new ArrayList<RelatedEvent>();
-        Collections.addAll(result, tmp);
+        if(tmp != null) Collections.addAll(result, tmp);
         return result;
     }
 }

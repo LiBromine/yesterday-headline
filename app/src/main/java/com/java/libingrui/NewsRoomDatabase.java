@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import android.util.Log;
 
-@Database(entities = {News.class, NewsList.class, EpidemicInfo.class, EntityData.class}, version = 1, exportSchema = false)
+@Database(entities = {News.class, NewsList.class, EpidemicInfo.class, EntityData.class, NewsEntityCrossRef.class}, version = 1, exportSchema = false)
 abstract class NewsRoomDatabase extends RoomDatabase {
 
     abstract NewsDao newsDao();
@@ -51,6 +51,7 @@ abstract class NewsRoomDatabase extends RoomDatabase {
                     dao.deleteAllNewsList();
                     dao.deleteAllEpidemicInfo();
                     dao.deleteAllEntityData();
+                    dao.deleteAllNewsEntityCrossRef();
                 }
             });
         }
