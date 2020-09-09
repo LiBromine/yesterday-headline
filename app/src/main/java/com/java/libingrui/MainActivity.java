@@ -55,6 +55,10 @@ public class MainActivity extends AppCompatActivity {
         initToolbar();
         initSearchView();
         setupWindowAnimations();
+
+        // update covid data in Main Activity
+        mNewsViewModel = new ViewModelProvider(this).get(NewsViewModel.class);
+        mNewsViewModel.updateEpidemicData();
     }
 
     public void initListCollectionFragment() {

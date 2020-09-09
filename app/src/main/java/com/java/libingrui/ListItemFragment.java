@@ -77,9 +77,6 @@ public class ListItemFragment extends Fragment implements OnRefreshListener, OnL
         rAdapter.setOnItemClickListener(new ListItemViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                //        TODO, set listener
-                Toast.makeText(getContext(), "Click " + position, Toast.LENGTH_SHORT).show();
-
                 TextView idReg = view.findViewById(R.id.news_brief_id);
                 String id = idReg.getText().toString();
                 mViewModel.getNewsById(id);

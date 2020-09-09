@@ -86,12 +86,14 @@ public class TypeInGridFragment extends Fragment {
                 TextView tmp = (TextView) view;
                 TextView explain = getView().findViewById(R.id.text_type_explain);
                 if (tmp.getText().toString().equals(getString(R.string.edit))) {
-                    tmp.setText(R.string.done);
-                    explain.setText("");
+
                     editViewText = getString(R.string.done);
                     editViewTextExplain = getString(R.string.done_explain);
+                    tmp.setText(R.string.done);
+                    explain.setText(R.string.done_explain);
                 } else {
                     tmp.setText(R.string.edit);
+                    explain.setText(R.string.edit_explain);
                     editViewText = getString(R.string.edit);
                     editViewTextExplain = getString(R.string.edit_explain);
                 }

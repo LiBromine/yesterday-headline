@@ -26,7 +26,9 @@ public class CollectionAdapter extends FragmentStateAdapter {
         Fragment fragment = new ListItemFragment();;
         if (categoryList != null && (!categoryList.get(position).equals("news") && !categoryList.get(position).equals("paper"))) {
             // TODO, create special fragment
-            fragment = new Fragment();
+            if (categoryList.get(position).equals("covid")) {
+                fragment = CovidDataFragment.newInstance();
+            }
         }
 
         // give args
