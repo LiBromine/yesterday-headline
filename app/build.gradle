@@ -69,4 +69,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.archLifecycleVersion"
     annotationProcessor "androidx.lifecycle:lifecycle-compiler:$rootProject.archLifecycleVersion"
 
+    // chart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
 }

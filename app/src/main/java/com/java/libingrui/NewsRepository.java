@@ -134,12 +134,12 @@ public class NewsRepository {
 
                 Log.v("debug", "upd EpiData map end");
 
-       //         synchronized (db) {
+                synchronized (db) {
                     Log.v("debug", "size="+epidemicInfos.size());
                     for(EpidemicInfo info : epidemicInfos) {
                         mNewsDao.insert(info);
                     }
-          //      }
+                }
                 Log.v("debug", "build EpidemicData finish");
             }
         });
