@@ -14,4 +14,6 @@ public class EntityData {
     @NonNull
     public EntityDetails entityDetails;
     public byte[] bitmap;
+
+    public int selected;
 }

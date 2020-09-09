@@ -18,12 +18,16 @@ public class NewsRepository {
     private NewsDao mNewsDao;
     private LiveData<News> mSelectedNews;
 
+    private LiveData<EntityData> mSelectedEntityData;
+
     private LiveData<NewsList> mGetNewsList;
     private LiveData<NewsList> mGetPaperList;
 
     private LiveData<NewsList> mGetSearchList;
 
     private LiveData<NewsList> mGetWatchedList;
+
+    private LiveData<EntityDataList> mGetSearchEntityDataList;
 
     private LiveData<List<String>> mCountryList;
     private LiveData<List<String>> mSelectedProvinceList;
@@ -41,12 +45,16 @@ public class NewsRepository {
 
         mSelectedNews = mNewsDao.getSelectedNews();
 
+        mSelectedEntityData = mNewsDao.getSelectedEntityData();
+
         mGetNewsList = mNewsDao.getNewsList();
         mGetPaperList = mNewsDao.getPaperList();
 
         mGetSearchList = mNewsDao.getSearchList();
 
         mGetWatchedList = mNewsDao.getWatchedList();
+
+        mGetSearchEntityDataList = mNewsDao.getSearchEntityDataList();
 
         mCountryList = mNewsDao.getCountryList();
         mSelectedProvinceList = mNewsDao.getSelectedProvince();
@@ -86,8 +94,16 @@ public class NewsRepository {
         return mGetWatchedList;
     }
 
+    LiveData<EntityDataList> getSearchEntityDataList() {
+        return mGetSearchEntityDataList;
+    }
+
     LiveData<News> getSelectedNews() {
         return mSelectedNews;
+    }
+
+    LiveData<EntityData> getSelectedEntityData() {
+        return mSelectedEntityData;
     }
 
     void updateEpidemicData() {
@@ -294,6 +310,36 @@ public class NewsRepository {
         });
     }
 
+    void getEntityDataByUrl(final String url) {
+        NewsRoomDatabase.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (db) {
+                    List<EntityData> list = mNewsDao.getNormalSelectedEntityData();
+                    for(EntityData item : list) {
+                        item.selected = 0;
+                        mNewsDao.insert(item);
+                    }
+
+                    EntityData current_data = mNewsDao.getEntityDataByUrl(url);
+                    if(current_data == null) {
+                        RemoteServiceManager mangager = new RemoteServiceManager();
+                        current_data = new EntityData();
+                        current_data.entityDetails = mangager.getEntityByUrl(url);
+                        if(current_data.entityDetails.img != null && !current_data.entityDetails.img.equals("")) {
+                            current_data.bitmap = BitmapByteArrayConverter.BitmapToByteArray(mangager.getBitmapByUrl(current_data.entityDetails.img));
+                        }
+                        else {
+                            current_data.bitmap = null;
+                        }
+                    }
+                    current_data.selected = 1;
+                    mNewsDao.insert(current_data);
+                }
+            }
+        });
+    }
+
     void getWatchedNews() {
         NewsRoomDatabase.databaseWriteExecutor.execute(new Runnable() {
             @Override
@@ -462,6 +508,35 @@ public class NewsRepository {
                         mNewsDao.updateEpidemicInfo(item);
                     }
                 }
+            }
+        });
+    }
+
+    void searchEntityDataListByKeyword(final String keyword) {
+        NewsRoomDatabase.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                RemoteServiceManager remoteServiceManager = new RemoteServiceManager();
+                List<EntityDetails> entityDetailsList = remoteServiceManager.getEntitiesByKeyWord(keyword);
+
+                List<EntityData> result = new ArrayList<EntityData>();
+                for(EntityDetails item : entityDetailsList) {
+                    EntityData current = new EntityData();
+                    current.entityDetails = item;
+                    current.selected = 0;
+                    current.bitmap = null;
+                    if(current.entityDetails.img != null && !current.entityDetails.img.equals("")) {
+                        current.bitmap = BitmapByteArrayConverter.BitmapToByteArray(remoteServiceManager.getBitmapByUrl(current.entityDetails.img));
+                    }
+                    result.add(current);
+                }
+
+                EntityDataList list = mNewsDao.getEntityDataListByType("search");
+                if (list == null) {
+                    list = new EntityDataList("search");
+                }
+                list.list = result;
+                mNewsDao.insert(list);
             }
         });
     }

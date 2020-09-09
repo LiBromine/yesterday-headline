@@ -70,12 +70,33 @@ public interface NewsDao {
     LiveData<NewsList> getWatchedList();
 
     //------------EntityData--------------
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(EntityData data);
 
     @Query("DELETE  from EntityData")
     void deleteAllEntityData();
-    //todo more method about EntityData
+
+    @Query("SELECT * from EntityData where url like :target_url")
+    EntityData getEntityDataByUrl(String target_url);
+
+    @Query("SELECT * from EntityData where selected=1")
+    LiveData<EntityData> getSelectedEntityData();
+
+    @Query("SELECT * from EntityData where selected=1")
+    List<EntityData> getNormalSelectedEntityData();
+
+    //-------------EntityDataList-------------
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insert(EntityDataList datalist);
+
+    @Query("DELETE from EntityDataList")
+    void deleteAllEntityDataList();
+
+    @Query("SELECT * from EntityDataList where type like :target_type")
+    EntityDataList getEntityDataListByType(String target_type);
+
+    @Query("SELECT * from EntityDataList where type='search'")
+    LiveData<EntityDataList> getSearchEntityDataList();
 
     //------------EpidemicInfo------------
     @Insert
