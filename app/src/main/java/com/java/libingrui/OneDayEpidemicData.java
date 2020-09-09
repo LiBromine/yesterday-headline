@@ -1,5 +1,7 @@
 package com.java.libingrui;
 
+import java.util.List;
+
 public class OneDayEpidemicData {
     public int CONFIRMED;
     public int SUSPECTED;
@@ -11,13 +13,20 @@ public class OneDayEpidemicData {
 
     public OneDayEpidemicData() {}
 
-    public OneDayEpidemicData(int[] data) {
-        CONFIRMED = data[0];
-        SUSPECTED = data[1];
-        CURED = data[2];
-        DEAD = data[3];
-        SEVERE = data[4];
-        RISK = data[5];
-        inc24 = data[6];
+    public OneDayEpidemicData(List<String> data) {
+        if( data.get(0)!= null) CONFIRMED = Integer.parseInt(data.get(0));
+        else CONFIRMED = 0;
+        if( data.get(1)!= null) SUSPECTED = Integer.parseInt(data.get(1));
+        else SUSPECTED = 0;
+        if( data.get(2)!= null) CURED = Integer.parseInt(data.get(2));
+        else CURED = 0;
+        if( data.get(3)!= null) DEAD = Integer.parseInt(data.get(3));
+        else DEAD = 0;
+        if( data.get(4)!= null) SEVERE = Integer.parseInt(data.get(4));
+        else SEVERE = 0;
+        if( data.get(5)!= null) RISK = Integer.parseInt(data.get(5));
+        else RISK = 0;
+        if( data.get(6)!= null) inc24 = Integer.parseInt(data.get(6));
+        else inc24 = 0;
     }
 }

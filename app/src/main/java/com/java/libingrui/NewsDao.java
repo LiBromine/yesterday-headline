@@ -117,11 +117,6 @@ public interface NewsDao {
     @Query("SELECT * from EpidemicInfo where country like :target_country and province like :target_province")
     List<EpidemicInfo> getCountyOfProvinceList(String target_country, String target_province);
 
-    @Query("SELECT * from EpidemicInfo where country like :target_country and province like :target_province" +
-            " and county like :target_county and timeValue >= :beginTime and timeValue < :endTime")
-    List<EpidemicInfo> getEpidemicInfoByRegionNameWithTimeLimit(String target_country, String target_province, String target_county,
-                                                                int beginTime, int endTime);
-
     @Query("SELECT * from EpidemicInfo where province='total' and county='total'")
     List<EpidemicInfo> getEpidemicInfoOfCountries();
 

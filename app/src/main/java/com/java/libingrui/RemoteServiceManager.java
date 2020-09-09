@@ -11,9 +11,11 @@ import java.net.URL;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.lang.reflect.Type;
 
 import com.google.gson.Gson;
-import com.google.gson.internal.$Gson$Preconditions;
+
+import com.google.gson.reflect.TypeToken;
 
 import android.graphics.Bitmap;
 
@@ -62,7 +64,9 @@ public class RemoteServiceManager {
         if( json != null) {
             Gson gson = new Gson();
             API_EPIDEMIC api_epidemic = new API_EPIDEMIC();
-            api_epidemic.item = gson.fromJson(json, api_epidemic.item.getClass());
+            Type type = new TypeToken<Map<String,API_DAYSEPIDEMICDATA>>(){}.getType();
+            Log.v("debug", "json=" + json);
+            api_epidemic.item = gson.fromJson(json, type);
             for(Entry<String, API_DAYSEPIDEMICDATA> entry : api_epidemic.item.entrySet() ) {
                 RegionName regionName = String2RegionName(entry.getKey());
                 DaysEpidemicData data = API2DaysEpidemicData(entry.getValue());
@@ -209,7 +213,7 @@ class API_EPIDEMIC {
 
 class API_DAYSEPIDEMICDATA {
     public String begin;
-    public List<int[]> data;
+    public List<List<String>> data;
 }
 
 class API_GETNEWSBYID {

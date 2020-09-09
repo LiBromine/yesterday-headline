@@ -110,8 +110,11 @@ public class NewsRepository {
         NewsRoomDatabase.databaseWriteExecutor.execute(new Runnable() {
             @Override
             public void run() {
+                Log.v("debug", "upd EpiData net service begin");
                 Map<RegionName, DaysEpidemicData> data = new RemoteServiceManager().getEpidemicData();
                 Set<Entry<RegionName, DaysEpidemicData> > entries = data.entrySet();
+
+                Log.v("debug", "upd EpiData net service end");
 
                 List<EpidemicInfo> epidemicInfos = new ArrayList<EpidemicInfo>();
 
@@ -120,21 +123,24 @@ public class NewsRepository {
                     String begin_date = entry.getValue().begin;
                     List<Day> days = genPeriod(begin_date, day_length);
                     List<OneDayEpidemicData> datas = entry.getValue().data;
-                    for(int i = 0; i < day_length; ++i) {
-                        EpidemicInfo info = new EpidemicInfo();
-                        info.region = entry.getKey();
-                        info.day = days.get(i);
-                        info.data = datas.get(i);
-                        info.selected = 0;
-                        epidemicInfos.add(info);
-                    }
+         //           Log.v("debug", "day_length = " + day_length);
+                    EpidemicInfo info = new EpidemicInfo();
+                    info.region = entry.getKey();
+                    info.day = days;
+                    info.data = datas;
+                    info.selected = 0;
+                    epidemicInfos.add(info);
                 }
 
-                synchronized (db) {
+                Log.v("debug", "upd EpiData map end");
+
+       //         synchronized (db) {
+                    Log.v("debug", "size="+epidemicInfos.size());
                     for(EpidemicInfo info : epidemicInfos) {
                         mNewsDao.insert(info);
                     }
-                }
+          //      }
+                Log.v("debug", "build EpidemicData finish");
             }
         });
     }
@@ -423,26 +429,6 @@ public class NewsRepository {
                         mNewsDao.updateEpidemicInfo(item);
                     }
                     List<EpidemicInfo> current_info = mNewsDao.getEpidemicInfoByRegionName(country,province,county);
-                    for(EpidemicInfo item : current_info) {
-                        item.selected = 1;
-                        mNewsDao.updateEpidemicInfo(item);
-                    }
-                }
-            }
-        });
-    }
-
-    void getEpidemicInfoByRegionNameWithTimeLimit(final String country, final String province, final String county, final int begin_time, final int end_time) {
-        NewsRoomDatabase.databaseWriteExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                synchronized (db) {
-                    List<EpidemicInfo> list = mNewsDao.getNormalSelectedEpidemicInfo();
-                    for(EpidemicInfo item : list) {
-                        item.selected = 0;
-                        mNewsDao.updateEpidemicInfo(item);
-                    }
-                    List<EpidemicInfo> current_info = mNewsDao.getEpidemicInfoByRegionNameWithTimeLimit(country,province,county,begin_time,end_time);
                     for(EpidemicInfo item : current_info) {
                         item.selected = 1;
                         mNewsDao.updateEpidemicInfo(item);
