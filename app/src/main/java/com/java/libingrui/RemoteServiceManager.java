@@ -26,6 +26,8 @@ public class RemoteServiceManager {
     private final int NEWS_PER_PAGE;
     private final int PAGE_NUMBER;
 
+    private final int TIMEOUT = 10000;
+
     RemoteServiceManager() {
         NEWS_PER_PAGE = 10;
         PAGE_NUMBER = 1;
@@ -36,67 +38,59 @@ public class RemoteServiceManager {
         this.PAGE_NUMBER = PAGE_NUMBER;
     }
 
-    public List<News> flushNews(String type) {
+    public List<News> flushNews(String type) throws MyException{
         String base_url = "https://covid-dashboard.aminer.cn/api/events/list";
         List<News> result = new ArrayList<News>();
         if( type.equals("news") || type.equals("paper")) {
             String url = base_url + "?type=" + type + "&page=" + PAGE_NUMBER + "&size=" + NEWS_PER_PAGE;
 
             String json = remoteGET(url);
-            if( json != null) {
+            if(json.length() > 0) {
                 Gson gson = new Gson();
                 API_EVENTS_LIST api_events_list = gson.fromJson(json, API_EVENTS_LIST.class);
-                for(News news : api_events_list.data) {
+                for (News news : api_events_list.data) {
                     news.selected = 0;
                 }
-
-                result.addAll(api_events_list.data);
             }
         }
         Log.v("debug", "from url get size=" + result.size());
         return result;
     }
 
-    public Map<RegionName,DaysEpidemicData> getEpidemicData() {
+    public Map<RegionName,DaysEpidemicData> getEpidemicData() throws MyException{
         String url = "https://covid-dashboard.aminer.cn/api/dist/epidemic.json";
         String json = remoteGET(url);
         Map<RegionName, DaysEpidemicData> result = new HashMap<RegionName, DaysEpidemicData>();
-        if( json != null) {
-            Gson gson = new Gson();
-            API_EPIDEMIC api_epidemic = new API_EPIDEMIC();
-            Type type = new TypeToken<Map<String,API_DAYSEPIDEMICDATA>>(){}.getType();
-            Log.v("debug", "json=" + json);
+        Gson gson = new Gson();
+        API_EPIDEMIC api_epidemic = new API_EPIDEMIC();
+        Type type = new TypeToken<Map<String,API_DAYSEPIDEMICDATA>>(){}.getType();
+        Log.v("debug", "json=" + json);
+        if(json.length() > 0) {
             api_epidemic.item = gson.fromJson(json, type);
-            for(Entry<String, API_DAYSEPIDEMICDATA> entry : api_epidemic.item.entrySet() ) {
+            for (Entry<String, API_DAYSEPIDEMICDATA> entry : api_epidemic.item.entrySet()) {
                 RegionName regionName = String2RegionName(entry.getKey());
                 DaysEpidemicData data = API2DaysEpidemicData(entry.getValue());
                 result.put(regionName, data);
             }
         }
-        else {
-            Log.v("debug", "network error when get Epidemic data");
-            //@TODO change log file to throw Exception
-        }
         return result;
     }
 
-    public News getNewsById(String id) {
+    public News getNewsById(String id) throws MyException{
         String url = "https://covid-dashboard.aminer.cn/event/" + id;
         String json = remoteGET(url);
-        if(json != null) {
+        if(json.length() > 0) {
             Gson gson = new Gson();
             API_GETNEWSBYID api_getnewsbyid = gson.fromJson(json, API_GETNEWSBYID.class);
             return api_getnewsbyid.data;
         }
-        else {
-            return null;
-        }
+        return null;
     }
 
-    public EntityDetails getEntityByUrl(String url) {
+    public EntityDetails getEntityByUrl(String url) throws MyException{
         String base_url = "https://covid-dashboard.aminer.cn/api/entity?url=" + url;
         String json = remoteGET(url);
-        if(json != null) {
+        if(json.length() > 0) {
             Gson gson = new Gson();
             API_GETENTITYBYURL api_getentitybyurl = gson.fromJson(json, API_GETENTITYBYURL.class);
             return api_getentitybyurl.data;
@@ -106,11 +100,11 @@ public class RemoteServiceManager {
         }
     }
 
-    public List<EntityDetails> getEntitiesByKeyWord(String keyWord) {
+    public List<EntityDetails> getEntitiesByKeyWord(String keyWord) throws MyException{
         String url = "https://innovaapi.aminer.cn/covid/api/v1/pneumonia/entityquery?entity=" + keyWord;
         String json = remoteGET(url);
         List<EntityDetails> list = new ArrayList<EntityDetails>();
-        if(json != null) {
+        if(json.length() > 0) {
             Gson gson = new Gson();
             API_GETENTITIESBYKEYWORD api_getentitiesbykeyword = gson.fromJson(json, API_GETENTITIESBYKEYWORD.class);
             list.addAll(api_getentitiesbykeyword.data);
@@ -126,6 +120,7 @@ public class RemoteServiceManager {
             HttpURLConnection conn = (HttpURLConnection) imageurl.openConnection();
             conn.setDoInput(true);
             conn.connect();
+            conn.setConnectTimeout(TIMEOUT);
             InputStream is = conn.getInputStream();
             bitmap = BitmapFactory.decodeStream(is);
             is.close();
@@ -166,12 +161,13 @@ public class RemoteServiceManager {
         return result;
     }
 
-    private String remoteGET(String path) {
+    private String remoteGET(String path) throws MyException {
         try {
             URL url = new URL(path);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.connect();
+            conn.setConnectTimeout(TIMEOUT);
             int responseCode = conn.getResponseCode();
 
             StringBuilder buffer = new StringBuilder();
@@ -191,7 +187,7 @@ public class RemoteServiceManager {
         catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        throw new MyException("remoteGet " + path);
     }
 }
 

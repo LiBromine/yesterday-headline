@@ -123,7 +123,6 @@ public class NewsRepository {
                     String begin_date = entry.getValue().begin;
                     List<Day> days = genPeriod(begin_date, day_length);
                     List<OneDayEpidemicData> datas = entry.getValue().data;
-         //           Log.v("debug", "day_length = " + day_length);
                     EpidemicInfo info = new EpidemicInfo();
                     info.region = entry.getKey();
                     info.day = days;

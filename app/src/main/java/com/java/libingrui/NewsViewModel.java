@@ -114,8 +114,6 @@ public class NewsViewModel extends AndroidViewModel {
     }
 
     void getNewsById(String target_id) {
-
-        Log.v("debug", "get news by id begin in viewModel");
         mRepository.getNewsById(target_id);
     }
 
