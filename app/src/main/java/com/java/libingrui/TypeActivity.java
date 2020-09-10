@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.transition.ChangeBounds;
 import android.transition.Fade;
 import android.transition.Slide;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -139,6 +140,7 @@ public class TypeActivity extends AppCompatActivity {
                 Intent intent = getIntent();
                 intent.putExtra(TYPE_IN, typeIn);
                 intent.putExtra(TYPE_OUT, typeOut);
+                Log.v("debug", "typeIn is " + typeIn);
                 setResult(typeIn.indexOf(type), intent);
                 finish();
             }

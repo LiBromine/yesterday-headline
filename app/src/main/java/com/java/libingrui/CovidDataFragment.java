@@ -1,6 +1,7 @@
 package com.java.libingrui;
 
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -42,17 +44,23 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.iterators.ObjectArrayIterator;
+import org.w3c.dom.Text;
 
 import static java.lang.Thread.sleep;
 
 public class CovidDataFragment extends Fragment {
     private NewsViewModel mViewModel;
-    private boolean isEpidemicDataReady;
+//    private boolean isEpidemicDataReady;
+    private boolean hasFoundData;
 
     private Spinner mSpinnerCountry;
     private Spinner mSpinnerProvince;
     private Spinner mSpinnerCounty;
+    private Spinner mSpinnerYear;
+    private Spinner mSpinnerMonth;
+    private Spinner mSpinnerDay;
     private Button mFindButton;
+    private Button mStatsButton;
     private LineChart mLineChart;
 
     ArrayAdapter<String> nullAdapter = new ArrayAdapter<>(MainActivity.context, R.layout.support_simple_spinner_dropdown_item, new ArrayList<String>());
@@ -87,15 +95,21 @@ public class CovidDataFragment extends Fragment {
         mSpinnerCountry = view.findViewById(R.id.spinner_country);
         mSpinnerProvince = view.findViewById(R.id.spinner_province);
         mSpinnerCounty = view.findViewById(R.id.spinner_county);
+        mSpinnerYear = view.findViewById(R.id.spinner_year);
+        mSpinnerMonth = view.findViewById(R.id.spinner_month);
+        mSpinnerDay = view.findViewById(R.id.spinner_day);
+
         mFindButton = view.findViewById(R.id.button_covid_region_data);
+        mStatsButton = view.findViewById(R.id.button_stats);
 
         countryList = new ArrayList<>();
         provinceList = new ArrayList<>();
         countyList = new ArrayList<>();
 
+        hasFoundData = false;
         initListener();
 
-        isEpidemicDataReady = false;
+//        isEpidemicDataReady = false;
         mViewModel = new ViewModelProvider(this).get(NewsViewModel.class);
         new Thread(new Runnable() {
             @Override
@@ -125,8 +139,43 @@ public class CovidDataFragment extends Fragment {
                 Log.w("debug", "country: " + country + "  province: " + province + "  county: " + county);
                 if (country != null && province != null && county != null) {
                     mViewModel.getEpidemicInfoByRegionName(country.toString(), province.toString(), county.toString());
+                    hasFoundData = true;
                 } else {
                     Toast.makeText(getContext(), "三个选项均不能为空", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        mStatsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Object year = mSpinnerYear.getSelectedItem();
+                Object month = mSpinnerMonth.getSelectedItem();
+                Object day = mSpinnerDay.getSelectedItem();
+                if (hasFoundData && year != null && month != null && day != null) {
+                    TextView ctv = view.findViewById(R.id.text_confirmed);
+                    TextView cutv = view.findViewById(R.id.text_cured);
+                    TextView dtv = view.findViewById(R.id.text_dead);
+                    int n = data.data.size();
+                    int i = 0;
+                    for (i = 0; i < n; i++) {
+                        if ((data.day.get(i).year == Integer.parseInt(year.toString()))
+                            && (data.day.get(i).month == Integer.parseInt(month.toString()))
+                            && (data.day.get(i).date == Integer.parseInt(day.toString()))) {
+                            Integer ci = data.data.get(i).CONFIRMED;
+                            Integer cui = data.data.get(i).CURED;
+                            Integer di = data.data.get(i).DEAD;
+                            Log.v("debug", "stats c/cu/d is " +  ci + "/" + cui + "/" + di);
+                            ctv.setText(ci.toString());
+                            cutv.setText(cui.toString());
+                            dtv.setText(di.toString());
+                            break;
+                        }
+                    }
+                    if (i == n) {
+                        Toast.makeText(getContext(), "没有这一天的数据哦", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getContext(), "请先查找某个地区数据", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -311,9 +360,11 @@ public class CovidDataFragment extends Fragment {
         LineDataSet lineDataSet3 = new LineDataSet(entries3, "DEAD");
         lineDataSet1.setColors(Color.BLUE);//, Color.BLUE,Color.BLUE, Color.BLUE);
         lineDataSet1.setCircleColor(Color.BLUE);
+        lineDataSet1.setLineWidth(2f);
         dataSets.add(lineDataSet1);
         lineDataSet2.setColors(Color.GREEN);//, Color.GREEN, Color.GREEN, Color.GREEN);
         lineDataSet2.setCircleColor(Color.GREEN);
+        lineDataSet2.setLineWidth(2.5f);
         dataSets.add(lineDataSet2);
         lineDataSet3.setColors(Color.RED);//, Color.RED,Color.RED, Color.RED);
         lineDataSet3.setCircleColor(Color.RED);
@@ -321,8 +372,12 @@ public class CovidDataFragment extends Fragment {
         LineData lineData = new LineData(dataSets);
         mLineChart.setData(lineData);
 
-//        MyValueFormatter mvf = new MyValueFormatter(info);
-//        mLineChart.getXAxis().setValueFormatter(mvf);
+        MyValueFormatter mvf = new MyValueFormatter(info);
+        mLineChart.getXAxis().setValueFormatter(mvf);
+
+        Matrix m=new Matrix();
+        m.postScale(2f, 1f);
+        mLineChart.getViewPortHandler().refresh(m, mLineChart, false);
         mLineChart.invalidate();
     }
 }
@@ -336,6 +391,6 @@ class MyValueFormatter extends ValueFormatter {
     @Override
     public String getAxisLabel(float value, AxisBase axis) {
         Day day = info.day.get((int)value);
-        return day.year + "-" + day.month + "-" + day.date;
+        return day.month + "-" + day.date;
     }
 }
