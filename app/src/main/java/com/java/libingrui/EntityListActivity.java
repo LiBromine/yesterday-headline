@@ -31,6 +31,7 @@ public class EntityListActivity extends AppCompatActivity {
         initToolbar(query);
         initRecycler();
         initViewModel();
+        mNewsViewModel.searchEntityDataByKeyword(query);
     }
 
     private void initToolbar(String query) {

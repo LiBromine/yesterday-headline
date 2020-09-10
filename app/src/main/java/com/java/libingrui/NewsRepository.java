@@ -635,35 +635,40 @@ public class NewsRepository {
     }
 
     void searchEntityDataListByKeyword(final String keyword) {
+        Log.v("debug", "achieve here");
         NewsRoomDatabase.databaseWriteExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                RemoteServiceManager remoteServiceManager = new RemoteServiceManager();
-                List<EntityDetails> entityDetailsList = null;
-                try {
-                    entityDetailsList = remoteServiceManager.getEntitiesByKeyWord(keyword);
-                }
-                catch (MyException e) {
-                    e.printStackTrace();
-                }
-                List<EntityData> result = new ArrayList<EntityData>();
-                for(EntityDetails item : entityDetailsList) {
-                    EntityData current = new EntityData();
-                    current.entityDetails = item;
-                    current.selected = 0;
-                    current.bitmap = null;
-                    if(current.entityDetails.img != null && !current.entityDetails.img.equals("")) {
-                        current.bitmap = BitmapByteArrayConverter.BitmapToByteArray(remoteServiceManager.getBitmapByUrl(current.entityDetails.img));
+                synchronized (db) {
+                    RemoteServiceManager remoteServiceManager = new RemoteServiceManager();
+                    List<EntityDetails> entityDetailsList = null;
+                    try {
+                        entityDetailsList = remoteServiceManager.getEntitiesByKeyWord(keyword);
+                        Log.v("debug", "search size=" + entityDetailsList.size());
+                    } catch (MyException e) {
+                        e.printStackTrace();
                     }
-                    result.add(current);
-                }
+                    List<EntityData> result = new ArrayList<EntityData>();
+                    for (EntityDetails item : entityDetailsList) {
+                        EntityData current = new EntityData();
+                        current.entityDetails = item;
+                        current.selected = 0;
+                        current.bitmap = null;
+                       /* if (current.entityDetails.img != null && !current.entityDetails.img.equals("")) {
+                            Log.v("debug", "load bitmap");
+                            current.bitmap = BitmapByteArrayConverter.BitmapToByteArray(remoteServiceManager.getBitmapByUrl(current.entityDetails.img));
+                        }*/
+                        result.add(current);
+                    }
 
-                EntityDataList list = mNewsDao.getEntityDataListByType("search");
-                if (list == null) {
-                    list = new EntityDataList("search");
+                    EntityDataList list = mNewsDao.getEntityDataListByType("search");
+                    if (list == null) {
+                        Log.v("debug", "new search list");
+                        list = new EntityDataList("search");
+                    }
+                    list.list = result;
+                    mNewsDao.insert(list);
                 }
-                list.list = result;
-                mNewsDao.insert(list);
             }
         });
     }

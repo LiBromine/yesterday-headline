@@ -107,10 +107,11 @@ public class RemoteServiceManager {
     }
 
     public EntityDetails getEntityByUrl(String url) throws MyException{
-        String base_url = "https://covid-dashboard.aminer.cn/api/entity?url=" + url;
-        String json = remoteGET(url);
+        String base_url = "https://covid-dashboard.aminer.cn/api/entity?url=" + url + "&time=0";
+        String json = remoteGET(base_url);
         if(json.length() > 0) {
             Gson gson = new Gson();
+            Log.v("debug", "json=" + json);
             API_GETENTITYBYURL api_getentitybyurl = gson.fromJson(json, API_GETENTITYBYURL.class);
             return api_getentitybyurl.data;
         }
