@@ -61,13 +61,14 @@ public class RemoteServiceManager {
         String url = "https://covid-dashboard.aminer.cn/api/dist/epidemic.json";
         String json = remoteGET(url);
         Map<RegionName, DaysEpidemicData> result = new HashMap<RegionName, DaysEpidemicData>();
-        Gson gson = new Gson();
-        API_EPIDEMIC api_epidemic = new API_EPIDEMIC();
-        Type type = new TypeToken<Map<String,API_DAYSEPIDEMICDATA>>(){}.getType();
-        Log.v("debug", "json=" + json);
-        if(json.length() > 0) {
+        if( json != null) {
+            Gson gson = new Gson();
+            API_EPIDEMIC api_epidemic = new API_EPIDEMIC();
+            Type type = new TypeToken<Map<String,API_DAYSEPIDEMICDATA>>(){}.getType();
+           // Log.v("debug", "json=" + json);
             api_epidemic.item = gson.fromJson(json, type);
-            for (Entry<String, API_DAYSEPIDEMICDATA> entry : api_epidemic.item.entrySet()) {
+            for(Entry<String, API_DAYSEPIDEMICDATA> entry : api_epidemic.item.entrySet() ) {
+             //   Log.v("debug",  "fuck");
                 RegionName regionName = String2RegionName(entry.getKey());
                 DaysEpidemicData data = API2DaysEpidemicData(entry.getValue());
                 result.put(regionName, data);
@@ -136,11 +137,12 @@ public class RemoteServiceManager {
         List<String> strings = new ArrayList<String>();
         int last_pos = -1;
         for(int i = 0; i < len; ++i) {
-            if(str.indexOf(i) == '|') {
+            if(str.charAt(i) ==  '|') {
                 strings.add(str.substring(last_pos + 1, i));
                 last_pos = i;
             }
         }
+        strings.add(str.substring(last_pos + 1, len));
         RegionName result = new RegionName();
         if(strings.size() >= 1) result.country = strings.get(0);
         else result.country = "total";
@@ -148,6 +150,7 @@ public class RemoteServiceManager {
         else result.province = "total";
         if(strings.size() >= 3) result.county = strings.get(2);
         else result.county = "total";
+        Log.v("debug", result.country + " " + result.province + " " + result.county);
         return result;
     }
 

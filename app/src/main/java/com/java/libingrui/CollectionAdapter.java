@@ -2,6 +2,7 @@ package com.java.libingrui;
 
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -23,13 +24,22 @@ public class CollectionAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         // Return a NEW fragment instance in createFragment(int)
-        Fragment fragment = new ListItemFragment();;
-        if (categoryList != null && (!categoryList.get(position).equals("news") && !categoryList.get(position).equals("paper"))) {
+        Fragment fragment = null;
+        if (categoryList != null) {
             // TODO, create special fragment
-            if (categoryList.get(position).equals("covid")) {
+            Log.v("debug", "create a fragment in " + categoryList.get(position) + " type");
+            Log.v("debug", "createFragment  Thread.currentThread().getId() = " + Thread.currentThread().getId());
+            if ((categoryList.get(position).equals("news") || categoryList.get(position).equals("paper"))) {
+                fragment = new ListItemFragment();
+            } else if (categoryList.get(position).equals("covid")) {
                 fragment = CovidDataFragment.newInstance();
             }
         }
+
+        if (fragment == null) {
+            fragment = new Fragment();
+        }
+        Log.w("debug", "fragment is " + fragment);
 
         // give args
         Bundle args = new Bundle();

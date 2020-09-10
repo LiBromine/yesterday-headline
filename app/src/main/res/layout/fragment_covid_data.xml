@@ -8,16 +8,272 @@
     <LinearLayout
 
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical" >
+<!--        android:divider="@drawable/divider"-->
+<!--        android:dividerPadding="10dp"-->
+<!--        android:showDividers="middle">-->
 
-        <Spinner
-            android:id="@+id/spinner_country"
-            android:layout_width="wrap_content"
+<!--        <androidx.cardview.widget.CardView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="20dp"-->
+<!--            android:minHeight="50dp"-->
+<!--            android:layout_marginHorizontal="20dp"-->
+<!--            android:layout_marginBottom="5dp"-->
+<!--            app:cardBackgroundColor="@color/cardview_light_background"-->
+<!--            app:cardCornerRadius="12dp"-->
+<!--            app:cardElevation="12dp">-->
+<!---->
+<!--        </androidx.cardview.widget.CardView>-->
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@android:style/Theme.Holo.Light"
-            />
+            android:layout_marginTop="20dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginBottom="5dp"
+            app:cardBackgroundColor="@color/cardview_light_background"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="12dp">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="地区疫情数据"
+                        android:layout_weight="3"
+                        android:gravity="center_vertical"
+                        android:textStyle="bold"
+                        android:textSize="22sp"/>
+
+                    <Button
+                        android:id="@+id/button_covid_region_data"
+                        android:layout_width="20dp"
+                        android:layout_height="wrap_content"
+                        android:text="Find"
+                        android:layout_weight="1"
+                        android:layout_gravity="right"/>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="Country:"
+                        android:gravity="center"
+                        android:layout_weight="1"/>
+
+                    <Spinner
+                        android:id="@+id/spinner_country"
+                        android:layout_height="wrap_content"
+                        android:layout_width="5dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_weight="3"
+                        style="@android:style/Theme.Holo.Light"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp">
+
+                    <TextView
+                        android:layout_width="47dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="Province:" />
+
+                    <Spinner
+                        android:id="@+id/spinner_province"
+                        style="@android:style/Theme.Holo.Light"
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_weight="3" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="County:"
+                        android:gravity="center"
+                        android:layout_weight="1"/>
+
+                    <Spinner
+                        android:id="@+id/spinner_county"
+                        android:layout_height="wrap_content"
+                        android:layout_width="5dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_weight="3"
+                        style="@android:style/Theme.Holo.Light"
+                        />
+                </LinearLayout>
+
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="20dp"-->
+<!--                    android:layout_marginTop="5dp"-->
+<!--                    android:layout_marginBottom="5dp" >-->
+<!---->
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:text="Time:"-->
+<!--                        android:gravity="center"-->
+<!--                        android:layout_weight="1"/>-->
+<!---->
+<!--                    <Spinner-->
+<!--                        android:id="@+id/spinner_year1"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_width="5dp"-->
+<!--                        android:layout_marginStart="5dp"-->
+<!--                        android:layout_weight="3"-->
+<!--                        style="@android:style/Theme.Holo.Light"-->
+<!--                        />-->
+<!---->
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:text="-"-->
+<!--                        android:gravity="center"-->
+<!--                        android:layout_weight="1"/>-->
+<!---->
+<!--                    <Spinner-->
+<!--                        android:id="@+id/spinner_month1"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_width="5dp"-->
+<!--                        android:layout_weight="3"-->
+<!--                        style="@android:style/Theme.Holo.Light"-->
+<!--                        />-->
+<!---->
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:text="-"-->
+<!--                        android:gravity="center"-->
+<!--                        android:layout_weight="1"/>-->
+<!---->
+<!--                    <Spinner-->
+<!--                        android:id="@+id/spinner_day1"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_width="5dp"-->
+<!--                        android:layout_marginEnd="5dp"-->
+<!--                        android:layout_weight="3"-->
+<!--                        style="@android:style/Theme.Holo.Light"-->
+<!--                        />-->
+<!---->
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:text="至"-->
+<!--                        android:gravity="center"-->
+<!--                        android:layout_weight="1"/>-->
+<!---->
+<!--                    <Spinner-->
+<!--                        android:id="@+id/spinner_year2"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_width="5dp"-->
+<!--                        android:layout_marginStart="5dp"-->
+<!--                        android:layout_weight="3"-->
+<!--                        style="@android:style/Theme.Holo.Light"-->
+<!--                        />-->
+<!---->
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:text="-"-->
+<!--                        android:gravity="center"-->
+<!--                        android:layout_weight="1"/>-->
+<!---->
+<!--                    <Spinner-->
+<!--                        android:id="@+id/spinner_month2"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_width="5dp"-->
+<!--                        android:layout_weight="3"-->
+<!--                        style="@android:style/Theme.Holo.Light"-->
+<!--                        />-->
+<!---->
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:text="-"-->
+<!--                        android:gravity="center"-->
+<!--                        android:layout_weight="1"/>-->
+<!---->
+<!--                    <Spinner-->
+<!--                        android:id="@+id/spinner_day2"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_width="5dp"-->
+<!--                        android:layout_marginEnd="5dp"-->
+<!--                        android:layout_weight="3"-->
+<!--                        style="@android:style/Theme.Holo.Light"-->
+<!--                        />-->
+<!--                </LinearLayout>-->
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="3">
+
+
+                </GridLayout>
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/line_chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:minHeight="200dp"/>
+
+            </LinearLayout>
+
+
+        </androidx.cardview.widget.CardView>
+
+
+<!--        <androidx.cardview.widget.CardView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:minHeight="200dp"-->
+<!--            android:layout_marginTop="20dp"-->
+<!--            android:layout_marginHorizontal="20dp"-->
+<!--            android:layout_marginBottom="5dp"-->
+<!--            app:cardBackgroundColor="@color/cardview_light_background"-->
+<!--            app:cardCornerRadius="12dp"-->
+<!--            app:cardElevation="12dp" >-->
+<!---->
+<!---->
+<!--        </androidx.cardview.widget.CardView>-->
     </LinearLayout>
 
 </ScrollView>

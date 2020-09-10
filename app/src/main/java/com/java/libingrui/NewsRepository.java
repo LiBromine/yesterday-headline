@@ -29,14 +29,17 @@ public class NewsRepository {
 
     private LiveData<EntityDataList> mGetSearchEntityDataList;
 
-    private LiveData<List<String>> mCountryList;
-    private LiveData<List<String>> mSelectedProvinceList;
-    private LiveData<List<String>> mSelectedCountyList;
+    private LiveData<StringList> mGetCountriesList;
+    private LiveData<StringList> mGetProvincesList;
+    private LiveData<StringList> mGetCountiesList;
+
     private LiveData<List<EpidemicInfo>> mSelectedEpidemicInfoList;
 
     private final int NEWS_PER_PAGE = 5;
 
     private NewsRoomDatabase db;
+
+    private boolean isEpidemicDataReady;
 
     NewsRepository(Application application) {
         db = NewsRoomDatabase.getDatabase(application);
@@ -56,23 +59,20 @@ public class NewsRepository {
 
         mGetSearchEntityDataList = mNewsDao.getSearchEntityDataList();
 
-        mCountryList = mNewsDao.getCountryList();
-        mSelectedProvinceList = mNewsDao.getSelectedProvince();
-        mSelectedCountyList = mNewsDao.getSelectedCounty();
+        mGetCountriesList = mNewsDao.getCountriesStringList();
+        mGetProvincesList = mNewsDao.getProvincesStringList();
+        mGetCountiesList = mNewsDao.getCountiesStringList();
+
         mSelectedEpidemicInfoList = mNewsDao.getSelectedEpidemicInfo();
+
+        isEpidemicDataReady = false;
     }
 
-    LiveData<List<String>> getCountryList() {
-        return mCountryList;
-    }
+    LiveData<StringList> getCountriesList() { return mGetCountriesList;}
 
-    LiveData<List<String>> getSelectedProvince() {
-        return mSelectedProvinceList;
-    }
+    LiveData<StringList> getProvincesList() { return mGetProvincesList;}
 
-    LiveData<List<String>> getSelectedCounty() {
-        return mSelectedCountyList;
-    }
+    LiveData<StringList> getCountiesList() { return mGetCountiesList;}
 
     LiveData<List<EpidemicInfo>> getSelectedEpidemicInfo() {
         return mSelectedEpidemicInfoList;
@@ -133,15 +133,28 @@ public class NewsRepository {
 
                 Log.v("debug", "upd EpiData map end");
 
-       //         synchronized (db) {
-                    Log.v("debug", "size="+epidemicInfos.size());
+                synchronized (db) {
                     for(EpidemicInfo info : epidemicInfos) {
                         mNewsDao.insert(info);
                     }
-          //      }
+
+                    StringList countryList = new StringList("countries");
+                    countryList.nameList = new ArrayList<>();
+                    List<CountryName> countryNames = mNewsDao.getNormalCountryList();
+                    for(CountryName name : countryNames) {
+                        countryList.nameList.add(name.country);
+                    }
+                    Collections.sort(countryList.nameList);
+                    mNewsDao.insert(countryList);
+                }
                 Log.v("debug", "build EpidemicData finish");
+                isEpidemicDataReady = true;
             }
         });
+    }
+
+    boolean getIsEpidemicDataReady() {
+        return isEpidemicDataReady;
     }
 
     private List<Day> genPeriod(String begin_date, int length) {
@@ -377,41 +390,37 @@ public class NewsRepository {
         }
     }
 
-    void getProvinceByCountry(final String country) {
+    void getProvincesOfCountry(final String country) {
         NewsRoomDatabase.databaseWriteExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 synchronized (db) {
-                    List<EpidemicInfo> list = mNewsDao.getNormalSelectedEpidemicInfo();
-                    for(EpidemicInfo item : list) {
-                        item.selected = 0;
-                        mNewsDao.updateEpidemicInfo(item);
+                    List<ProvinceName> list = mNewsDao.getNormalProvinceList(country);
+                    StringList provinceList = new StringList("provinces");
+                    provinceList.nameList = new ArrayList<>();
+                    for(ProvinceName name : list) {
+                        provinceList.nameList.add(name.province);
                     }
-                    List<EpidemicInfo> current_info = mNewsDao.getProvinceOfCountryList(country);
-                    for(EpidemicInfo item : current_info) {
-                        item.selected = 1;
-                        mNewsDao.updateEpidemicInfo(item);
-                    }
+                    Collections.sort(provinceList.nameList);
+                    mNewsDao.insert(provinceList);
                 }
             }
         });
     }
 
-    void getCountyByProvince(final String country, final String province) {
+    void getCountiesOfProvince(final String country, final String province) {
         NewsRoomDatabase.databaseWriteExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 synchronized (db) {
-                    List<EpidemicInfo> list = mNewsDao.getNormalSelectedEpidemicInfo();
-                    for(EpidemicInfo item : list) {
-                        item.selected = 0;
-                        mNewsDao.updateEpidemicInfo(item);
+                    List<CountyName> list = mNewsDao.getNormalCountyList(country, province);
+                    StringList countyList = new StringList("counties");
+                    countyList.nameList = new ArrayList<>();
+                    for (CountyName name : list) {
+                        countyList.nameList.add(name.county);
                     }
-                    List<EpidemicInfo> current_info = mNewsDao.getCountyOfProvinceList(country, province);
-                    for(EpidemicInfo item : current_info) {
-                        item.selected = 1;
-                        mNewsDao.updateEpidemicInfo(item);
-                    }
+                    Collections.sort(countyList.nameList);
+                    mNewsDao.insert(countyList);
                 }
             }
         });
@@ -571,18 +580,15 @@ public class NewsRepository {
                         }
                     }
 
-                    Log.v("debug", "search result size=" + relatedNews.size());
                     for(News news : relatedNews) {
                         savedInsertNews(news);
                     }
                     NewsList list = mNewsDao.getNewsListByType("search");
                     if(list != null) {
-                        Log.v("debug", "in if");
                         list.list = relatedNews;
                         mNewsDao.updateNewsList(list);
                     }
                     else {
-                        Log.v("debug", "in else");
                         list = new NewsList("search");
                         list.list = relatedNews;
                         mNewsDao.insert(list);
@@ -604,8 +610,8 @@ public class NewsRepository {
             ref2.news_id = news._id;
             mNewsDao.insert(ref2);
 
-            Log.v("debug", "add " + ref.url + ref.news_id);
-            Log.v("debug", "add " + ref2.url + ref2.news_id);
+   //         Log.v("debug", "add " + ref.url + ref.news_id);
+   //         Log.v("debug", "add " + ref2.url + ref2.news_id);
         }
         mNewsDao.insert(news);
     }
