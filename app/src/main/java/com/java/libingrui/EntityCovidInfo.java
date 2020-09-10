@@ -15,7 +15,7 @@ import com.google.gson.reflect.TypeToken;
 
 @Entity
 @TypeConverters({
-        MapOfPropertiesConverter.class,
+        MapStringToStringConverter.class,
         ListOfEntityRelationConverter.class
 })
 public class EntityCovidInfo {
@@ -41,6 +41,7 @@ class ListOfEntityRelationConverter {
     }
 }
 
+/*
 class MapOfPropertiesConverter {
     @TypeConverter
     public String ObjectToString(Map<String,String> properties) {
@@ -54,4 +55,4 @@ class MapOfPropertiesConverter {
         Type type = new TypeToken<Map<String,String>>(){}.getType();
         return gson.fromJson(json, type);
     }
-}
+}*/

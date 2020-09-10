@@ -44,6 +44,35 @@ public interface NewsDao {
     @Query("DELETE from NewsEntityCrossRef")
     void deleteAllNewsEntityCrossRef();
 
+    //------------Person------------
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insert(Person person);
+
+    @Query("DELETE from Person")
+    void deleteAllPerson();
+
+    @Query("SELECT * from Person where id like :target_id")
+    Person getPersonById(String target_id);
+
+    @Query("SELECT * from Person where selected=1")
+    LiveData<Person> getSelectedPerson();
+
+    @Query("SELECT * from Person where selected=1")
+    List<Person> getNormalSelectedPerson();
+
+    //------------PersonList----------
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insert(PersonList personList);
+
+    @Query("DELETE from PersonList")
+    void deleteAllPersonList();
+
+    @Query("SELECT * from PersonList where type like :target_type")
+    PersonList getPersonListByType(String target_type);
+
+    @Query("SELECT * from PersonList where type='all'")
+    LiveData<PersonList> getAllPersonList();
+
     //------------NewsList---------------
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(NewsList newslist);
