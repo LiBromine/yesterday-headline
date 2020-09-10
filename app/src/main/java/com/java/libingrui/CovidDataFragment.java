@@ -1,5 +1,7 @@
 package com.java.libingrui;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,13 +20,22 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class CovidDataFragment extends Fragment {
     private NewsViewModel mViewModel;
@@ -61,7 +72,6 @@ public class CovidDataFragment extends Fragment {
         mSpinnerProvince = view.findViewById(R.id.spinner_province);
         mSpinnerCounty = view.findViewById(R.id.spinner_county);
         mFindButton = view.findViewById(R.id.button_covid_region_data);
-        mLineChart = view.findViewById(R.id.line_chart);
 
         countryList = new ArrayList<>();
         provinceList = new ArrayList<>();
@@ -69,6 +79,7 @@ public class CovidDataFragment extends Fragment {
 
         initListener();
         initViewModel(view);
+        initLineChart(view);
 
         mSpinnerCountry.setOnItemSelectedListener(listenerCountry);
         mSpinnerProvince.setOnItemSelectedListener(listenerProvince);
@@ -96,11 +107,11 @@ public class CovidDataFragment extends Fragment {
         testList.add("Chin");
         testList.add("Topology");
         ArrayAdapter<String> test = new ArrayAdapter<>(MainActivity.context, R.layout.support_simple_spinner_dropdown_item, testList);
-//        mSpinnerCountry.setAdapter(test);
+        mSpinnerCountry.setAdapter(test);
 
 
         List<Entry> entries = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 100; i++) {
             entries.add(new Entry(i, i * i));
         }
         LineDataSet lineDataSet = new LineDataSet(entries, "Label");
@@ -108,8 +119,7 @@ public class CovidDataFragment extends Fragment {
         lineDataSet.setValueTextColor(R.color.colorPrimary);
         LineData lineData = new LineData(lineDataSet);
         mLineChart.setData(lineData);
-        mLineChart.setScaleEnabled(true);
-        mLineChart.setDragEnabled(true);
+//        setData(20, 20);
         mLineChart.invalidate();
 
     }
@@ -147,10 +157,10 @@ public class CovidDataFragment extends Fragment {
         mViewModel.getCountryList().observe(this, new Observer<List<String>>() {
             @Override
             public void onChanged(List<String> strings) {
-                countryList = strings;
-                Collections.sort(countryList);
-                ArrayAdapter<String> newAdapter = new ArrayAdapter<>(MainActivity.context, R.layout.support_simple_spinner_dropdown_item, countryList);
-                mSpinnerCountry.setAdapter(newAdapter);
+//                countryList = strings;
+//                Collections.sort(countryList);
+//                ArrayAdapter<String> newAdapter = new ArrayAdapter<>(MainActivity.context, R.layout.support_simple_spinner_dropdown_item, countryList);
+//                mSpinnerCountry.setAdapter(newAdapter);
             }
         });
 
@@ -181,5 +191,20 @@ public class CovidDataFragment extends Fragment {
 //                 TODO, chart
             }
         });
+    }
+
+    private void initLineChart(View view) {
+        mLineChart = view.findViewById(R.id.line_chart);
+
+        // enable touch gestures
+        mLineChart.setTouchEnabled(true);
+
+        mLineChart.setDragDecelerationFrictionCoef(0.9f);
+
+        // enable scaling and dragging
+        mLineChart.setDragEnabled(true);
+        mLineChart.setScaleEnabled(true);
+        mLineChart.setHighlightPerDragEnabled(true);
+
     }
 }
