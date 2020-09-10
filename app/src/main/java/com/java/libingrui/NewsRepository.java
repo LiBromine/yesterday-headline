@@ -33,6 +33,8 @@ public class NewsRepository {
 
     private LiveData<EntityDataList> mGetSearchEntityDataList;
 
+    private LiveData<PersonList> mGetPassedAwayPersonList;
+
     private LiveData<StringList> mGetCountriesList;
     private LiveData<StringList> mGetProvincesList;
     private LiveData<StringList> mGetCountiesList;
@@ -64,6 +66,7 @@ public class NewsRepository {
         mGetWatchedList = mNewsDao.getWatchedList();
 
         mGetAllPersonList = mNewsDao.getAllPersonList();
+        mGetPassedAwayPersonList = mNewsDao.getPassedAwayPersonList();
 
         mGetSearchEntityDataList = mNewsDao.getSearchEntityDataList();
 
@@ -103,6 +106,8 @@ public class NewsRepository {
     }
 
     LiveData<PersonList> getAllPersonList() { return mGetAllPersonList;}
+
+    LiveData<PersonList> getPassedAwayPersonList() { return mGetPassedAwayPersonList;}
 
     LiveData<EntityDataList> getSearchEntityDataList() {
         return mGetSearchEntityDataList;
@@ -425,6 +430,22 @@ public class NewsRepository {
                     }
                     current_person.selected = 1;
                     mNewsDao.insert(current_person);
+                }
+            }
+        });
+    }
+
+    void getPassedAwayPerson() {
+        NewsRoomDatabase.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (db) {
+                    List<Person> list = mNewsDao.getNormalPassedAwayPerson();
+                    PersonList myList = new PersonList("passedaway");
+                    for(Person person : list) {
+                        myList.list.add(person);
+                    }
+                    mNewsDao.insert(myList);
                 }
             }
         });
