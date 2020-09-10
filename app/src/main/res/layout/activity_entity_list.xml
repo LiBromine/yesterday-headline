@@ -13,7 +13,7 @@
         android:background="@color/colorToolBar">
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/my_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -22,15 +22,12 @@
             android:textStyle="bold"
             android:textSize="20sp" />
 
-        <SearchView
-            android:id="@+id/my_search"
-            android:iconifiedByDefault="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:queryHint="搜索想看的新闻"
-            />
     </androidx.appcompat.widget.Toolbar>
 
-
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list_entity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        />
 </LinearLayout>

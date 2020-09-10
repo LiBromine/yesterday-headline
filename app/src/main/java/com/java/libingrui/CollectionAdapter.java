@@ -33,6 +33,8 @@ public class CollectionAdapter extends FragmentStateAdapter {
                 fragment = new ListItemFragment();
             } else if (categoryList.get(position).equals("covid")) {
                 fragment = CovidDataFragment.newInstance();
+            } else if (categoryList.get(position).equals("graph")) {
+                fragment = EntityFragment.newInstance();
             }
         }
 
