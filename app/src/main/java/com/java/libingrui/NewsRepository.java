@@ -39,6 +39,8 @@ public class NewsRepository {
 
     private NewsRoomDatabase db;
 
+    private boolean isEpidemicDataReady;
+
     NewsRepository(Application application) {
         db = NewsRoomDatabase.getDatabase(application);
 
@@ -62,6 +64,8 @@ public class NewsRepository {
         mGetCountiesList = mNewsDao.getCountiesStringList();
 
         mSelectedEpidemicInfoList = mNewsDao.getSelectedEpidemicInfo();
+
+        isEpidemicDataReady = false;
     }
 
     LiveData<StringList> getCountriesList() { return mGetCountriesList;}
@@ -145,9 +149,13 @@ public class NewsRepository {
                     mNewsDao.insert(countryList);
                 }
                 Log.v("debug", "build EpidemicData finish");
-
+                isEpidemicDataReady = true;
             }
         });
+    }
+
+    boolean getIsEpidemicDataReady() {
+        return isEpidemicDataReady;
     }
 
     private List<Day> genPeriod(String begin_date, int length) {

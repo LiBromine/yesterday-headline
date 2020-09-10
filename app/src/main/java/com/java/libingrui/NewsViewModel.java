@@ -141,4 +141,8 @@ public class NewsViewModel extends AndroidViewModel {
     LiveData<EntityData> getSelectedEntityData() {
         return mGetSelectedEntityData;
     }
+
+    boolean isEpidemicDataReady() {
+        return mRepository.getIsEpidemicDataReady();
+    }
 }
