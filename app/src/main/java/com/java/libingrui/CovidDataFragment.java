@@ -20,13 +20,16 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.text.SimpleDateFormat;
@@ -40,8 +43,11 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.iterators.ObjectArrayIterator;
 
+import static java.lang.Thread.sleep;
+
 public class CovidDataFragment extends Fragment {
     private NewsViewModel mViewModel;
+    private boolean isEpidemicDataReady;
 
     private Spinner mSpinnerCountry;
     private Spinner mSpinnerProvince;
@@ -66,10 +72,17 @@ public class CovidDataFragment extends Fragment {
         return f;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        Log.v("debug", "onCreate in CDF");
+        super.onCreate(savedInstanceState);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        Log.v("debug", "onCreateView in CDF");
         View view = inflater.inflate(R.layout.fragment_covid_data, container, false);
         mSpinnerCountry = view.findViewById(R.id.spinner_country);
         mSpinnerProvince = view.findViewById(R.id.spinner_province);
@@ -81,8 +94,25 @@ public class CovidDataFragment extends Fragment {
         countyList = new ArrayList<>();
 
         initListener();
-        initViewModel(view);
-        initLineChart(view);
+
+        isEpidemicDataReady = false;
+        mViewModel = new ViewModelProvider(this).get(NewsViewModel.class);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+//                while (!isEpidemicDataReady) {
+//                    isEpidemicDataReady = mViewModel.isEpidemicDataReady();
+//                    Log.v("debug", "isEpiDataReady " + isEpidemicDataReady);
+//                    try {
+//                        sleep(100);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+            }
+        }).start();
+        initViewModel();
 
         mSpinnerCountry.setOnItemSelectedListener(listenerCountry);
         mSpinnerProvince.setOnItemSelectedListener(listenerProvince);
@@ -100,41 +130,26 @@ public class CovidDataFragment extends Fragment {
                 }
             }
         });
+
+        initLineChart(view);
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        List<String> testList = new ArrayList<>();
-        testList.add("China");
-        testList.add("Chin");
-        testList.add("Topology");
-        ArrayAdapter<String> test = new ArrayAdapter<>(MainActivity.context, R.layout.support_simple_spinner_dropdown_item, testList);
-        mSpinnerCountry.setAdapter(test);
-
-
-        List<Entry> entries = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
-            entries.add(new Entry(i, i * i));
-        }
-        LineDataSet lineDataSet = new LineDataSet(entries, "Label");
-        lineDataSet.setColor(R.color.colorAccent);
-        lineDataSet.setValueTextColor(R.color.colorPrimary);
-        LineData lineData = new LineData(lineDataSet);
-        mLineChart.setData(lineData);
-//        setData(20, 20);
-        mLineChart.invalidate();
-
+        Log.v("debug", "onViewCreated in CDF");
     }
 
     private void initListener() {
         listenerCountry = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String country = mSpinnerCountry.getSelectedItem().toString();
-                Log.w("debug", "country listener get " + country);
-                mViewModel.getProvincesOfCountry(country);
-                mSpinnerCounty.setAdapter(nullAdapter);
+                Object country = mSpinnerCountry.getSelectedItem();
+                if (country != null) {
+                    Log.w("debug", "country listener get " + country);
+                    mViewModel.getProvincesOfCountry(country.toString());
+                    mSpinnerCounty.setAdapter(nullAdapter);
+                }
             }
 
             @Override
@@ -155,9 +170,10 @@ public class CovidDataFragment extends Fragment {
         };
     }
 
-    private void initViewModel(View view) {
+    private void initViewModel() {
         Log.v("debug", "initViewModel");
         mViewModel = new ViewModelProvider(this).get(NewsViewModel.class);
+
         mViewModel.getStringListByType("countries").observe(this, new Observer<StringList>() {
             @Override
             public void onChanged(StringList stringList) {
@@ -252,8 +268,12 @@ public class CovidDataFragment extends Fragment {
         mViewModel.getSelectedEpidemicInfo().observe(this, new Observer<List<EpidemicInfo>>() {
             @Override
             public void onChanged(List<EpidemicInfo> epidemicInfos) {
-//                data = epidemicInfos.get()
-//                 TODO, chart
+                if (!epidemicInfos.isEmpty()) {
+                    data = epidemicInfos.get(0);
+                    if (data != null) {
+                        setData(data);
+                    }
+                }
             }
         });
     }
@@ -270,6 +290,52 @@ public class CovidDataFragment extends Fragment {
         mLineChart.setDragEnabled(true);
         mLineChart.setScaleEnabled(true);
         mLineChart.setHighlightPerDragEnabled(true);
+    }
 
+    private void setData(EpidemicInfo info) {
+
+
+        List<OneDayEpidemicData> oneDayData = info.data;
+        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+
+        List<Entry> entries1 = new ArrayList<>();
+        List<Entry> entries2 = new ArrayList<>();
+        List<Entry> entries3 = new ArrayList<>();
+        for (int i = 0; i < oneDayData.size(); i++) {
+            entries1.add(new Entry(i, oneDayData.get(i).CONFIRMED));
+            entries2.add(new Entry(i, oneDayData.get(i).CURED));
+            entries3.add(new Entry(i, oneDayData.get(i).DEAD));
+        }
+        LineDataSet lineDataSet1 = new LineDataSet(entries1, "CONFIRMED");
+        LineDataSet lineDataSet2 = new LineDataSet(entries2, "CURED");
+        LineDataSet lineDataSet3 = new LineDataSet(entries3, "DEAD");
+        lineDataSet1.setColors(Color.BLUE);//, Color.BLUE,Color.BLUE, Color.BLUE);
+        lineDataSet1.setCircleColor(Color.BLUE);
+        dataSets.add(lineDataSet1);
+        lineDataSet2.setColors(Color.GREEN);//, Color.GREEN, Color.GREEN, Color.GREEN);
+        lineDataSet2.setCircleColor(Color.GREEN);
+        dataSets.add(lineDataSet2);
+        lineDataSet3.setColors(Color.RED);//, Color.RED,Color.RED, Color.RED);
+        lineDataSet3.setCircleColor(Color.RED);
+        dataSets.add(lineDataSet3);
+        LineData lineData = new LineData(dataSets);
+        mLineChart.setData(lineData);
+
+//        MyValueFormatter mvf = new MyValueFormatter(info);
+//        mLineChart.getXAxis().setValueFormatter(mvf);
+        mLineChart.invalidate();
+    }
+}
+
+class MyValueFormatter extends ValueFormatter {
+    private EpidemicInfo info;
+    MyValueFormatter(EpidemicInfo data) {
+        info = data;
+    }
+
+    @Override
+    public String getAxisLabel(float value, AxisBase axis) {
+        Day day = info.day.get((int)value);
+        return day.year + "-" + day.month + "-" + day.date;
     }
 }
