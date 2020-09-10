@@ -19,6 +19,7 @@ public class NewsViewModel extends AndroidViewModel {
     private LiveData<NewsList> mWatchedList;
 
     private LiveData<PersonList> mAllPersonList;
+    private LiveData<PersonList> mPassedAwayPersonList;
 
     private LiveData<News> mGetSelectedNews;
 
@@ -46,6 +47,7 @@ public class NewsViewModel extends AndroidViewModel {
         mWatchedList = mRepository.getWatchedList();
 
         mAllPersonList = mRepository.getAllPersonList();
+        mPassedAwayPersonList = mRepository.getPassedAwayPersonList();
 
         mGetSelectedNews = mRepository.getSelectedNews();
 
@@ -104,6 +106,10 @@ public class NewsViewModel extends AndroidViewModel {
         return mAllPersonList;
     }
 
+    LiveData<PersonList> getPassedAwayPersonList() {
+        return mPassedAwayPersonList;
+    }
+
     void getProvincesOfCountry(String country) {
         mRepository.getProvincesOfCountry(country);
     }
@@ -152,6 +158,10 @@ public class NewsViewModel extends AndroidViewModel {
 
     void flushPerson() {
         mRepository.flushPerson();;
+    }
+
+    void flushPassedAwayPerson() {
+        mRepository.getPassedAwayPerson();
     }
 
     void searchNewsByKeyword(final String keyword) {

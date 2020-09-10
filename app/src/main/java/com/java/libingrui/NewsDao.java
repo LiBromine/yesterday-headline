@@ -60,6 +60,9 @@ public interface NewsDao {
     @Query("SELECT * from Person where selected=1")
     List<Person> getNormalSelectedPerson();
 
+    @Query("SELECT * from Person where is_passedaway=1")
+    List<Person> getNormalPassedAwayPerson();
+
     //------------PersonList----------
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(PersonList personList);
@@ -72,6 +75,9 @@ public interface NewsDao {
 
     @Query("SELECT * from PersonList where type='all'")
     LiveData<PersonList> getAllPersonList();
+
+    @Query("SELECT * from PersonList where type='passedaway'")
+    LiveData<PersonList> getPassedAwayPersonList();
 
     //------------NewsList---------------
     @Insert(onConflict = OnConflictStrategy.REPLACE)
