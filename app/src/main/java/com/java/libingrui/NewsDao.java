@@ -98,6 +98,29 @@ public interface NewsDao {
     @Query("SELECT * from EntityDataList where type='search'")
     LiveData<EntityDataList> getSearchEntityDataList();
 
+    //------------StringList--------------
+    @Transaction
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insert(StringList stringList);
+
+    @Query("DELETE from StringList")
+    void deleteAllStringList();
+
+    @Transaction
+    @Query("SELECT * from StringList where type='countries'")
+    LiveData<StringList> getCountriesStringList();
+
+    @Transaction
+    @Query("SELECT * from StringList where type='provinces'")
+    LiveData<StringList> getProvincesStringList();
+
+    @Transaction
+    @Query("SELECT * from StringList where type='counties'")
+    LiveData<StringList> getCountiesStringList();
+
+    @Query("SELECT * from StringList where type like :target_type")
+    StringList getStringListByType(String target_type);
+
     //------------EpidemicInfo------------
     @Insert
     void insert(EpidemicInfo info);
@@ -108,14 +131,14 @@ public interface NewsDao {
     @Query("SELECT * from EpidemicInfo where country like :target_country and province like :target_province and county like :target_county")
     List<EpidemicInfo> getEpidemicInfoByRegionName(String target_country, String target_province, String target_county);
 
-    @Query("SELECT country from EpidemicInfo")
-    LiveData<List<String>> getCountryList();
+    @Query("SELECT DISTINCT country from EpidemicInfo")
+    List<CountryName> getNormalCountryList();
 
-    @Query("SELECT * from EpidemicInfo where country like :target_country")
-    List<EpidemicInfo> getProvinceOfCountryList(String target_country);
+    @Query("SELECT DISTINCT province from EpidemicInfo where country like :target_country")
+    List<ProvinceName> getNormalProvinceList(String target_country);
 
-    @Query("SELECT * from EpidemicInfo where country like :target_country and province like :target_province")
-    List<EpidemicInfo> getCountyOfProvinceList(String target_country, String target_province);
+    @Query("SELECT DISTINCT county from EpidemicInfo where country like :target_country and province like :target_province")
+    List<CountyName> getNormalCountyList(String target_country, String target_province);
 
     @Query("SELECT * from EpidemicInfo where province='total' and county='total'")
     List<EpidemicInfo> getEpidemicInfoOfCountries();

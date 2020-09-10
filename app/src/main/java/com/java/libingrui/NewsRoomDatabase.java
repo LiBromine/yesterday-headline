@@ -18,7 +18,8 @@ import android.util.Log;
                     EpidemicInfo.class,
                     EntityData.class,
                     NewsEntityCrossRef.class,
-                    EntityDataList.class
+                    EntityDataList.class,
+                    StringList.class
                     },
         version = 1, exportSchema = false)
 abstract class NewsRoomDatabase extends RoomDatabase {
@@ -61,6 +62,7 @@ abstract class NewsRoomDatabase extends RoomDatabase {
                     dao.deleteAllEntityData();
                     dao.deleteAllNewsEntityCrossRef();
                     dao.deleteAllEntityDataList();
+                    dao.deleteAllStringList();
                 }
             });
         }

@@ -72,4 +72,8 @@ dependencies {
     // chart
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-collections4
+    implementation 'org.apache.commons:commons-collections4:4.1'
+
+
 }

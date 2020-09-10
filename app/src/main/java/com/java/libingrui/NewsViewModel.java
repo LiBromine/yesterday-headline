@@ -22,9 +22,10 @@ public class NewsViewModel extends AndroidViewModel {
 
     private LiveData<EntityData> mGetSelectedEntityData;
 
-    private LiveData<List<String>> mCountryList;
-    private LiveData<List<String>> mSelectedProvince;
-    private LiveData<List<String>> mSelectedCounty;
+    private LiveData<StringList> mGetCountriesList;
+    private LiveData<StringList> mGetProvincesList;
+    private LiveData<StringList> mGetCountiesList;
+
     private LiveData<List<EpidemicInfo>> mSelectedEpidemicInfo;
 
     public NewsViewModel(Application application) {
@@ -42,9 +43,10 @@ public class NewsViewModel extends AndroidViewModel {
 
         mGetSelectedEntityData = mRepository.getSelectedEntityData();
 
-        mCountryList = mRepository.getCountryList();
-        mSelectedProvince = mRepository.getSelectedProvince();
-        mSelectedCounty = mRepository.getSelectedCounty();
+        mGetCountriesList = mRepository.getCountriesList();
+        mGetProvincesList = mRepository.getProvincesList();
+        mGetCountiesList = mRepository.getCountiesList();
+
         mSelectedEpidemicInfo = mRepository.getSelectedEpidemicInfo();
     }
 
@@ -65,28 +67,29 @@ public class NewsViewModel extends AndroidViewModel {
         return null;
     }
 
-    LiveData<List<String>> getCountryList() {
-        return mCountryList;
-    }
-
-    LiveData<List<String>> getProvinceList() {
-        return mSelectedProvince;
-    }
-
-    LiveData<List<String>> getCountyList() {
-        return mSelectedCounty;
+    LiveData<StringList> getStringListByType(String type) {
+        if(type.equals("countries")) {
+            return mGetCountriesList;
+        }
+        if(type.equals("provinces")) {
+            return mGetProvincesList;
+        }
+        if(type.equals("counties")) {
+            return mGetCountiesList;
+        }
+        return null;
     }
 
     LiveData<List<EpidemicInfo>> getSelectedEpidemicInfo() {
         return mSelectedEpidemicInfo;
     }
 
-    void getProvinceByCountry(String country) {
-        mRepository.getProvinceByCountry(country);
+    void getProvincesOfCountry(String country) {
+        mRepository.getProvincesOfCountry(country);
     }
 
-    void getCountyByProvince(String country, String province) {
-        mRepository.getCountyByProvince(country, province);
+    void getCountiesOfProvince(String country, String province) {
+        mRepository.getCountiesOfProvince(country,province);
     }
 
     void getEpidemicInfoByRegionName(String country, String province, String county) {
