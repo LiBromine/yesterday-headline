@@ -54,7 +54,24 @@ public class RemoteServiceManager {
                 result.addAll(api_events_list.data);
             }
         }
-        Log.v("debug", "from url get size=" + result.size());
+        Log.v("debug", "from url get news size=" + result.size());
+        return result;
+    }
+
+    public List<Person> flushPerson() throws MyException {
+        String url = "https://innovaapi.aminer.cn/predictor/api/v1/valhalla/highlight/get_ncov_expers_list?v=2";
+        List<Person> result = new ArrayList<>();
+
+        String json = remoteGET(url);
+        if(json.length() > 0) {
+            Gson gson = new Gson();
+            API_PERSON_LIST api_person_list = gson.fromJson(json, API_PERSON_LIST.class);
+            for(Person person : api_person_list.data) {
+                person.selected = 0;
+            }
+            result.addAll(api_person_list.data);
+        }
+        Log.v("debug", "from url get Person size = " + result.size());
         return result;
     }
 
@@ -198,6 +215,12 @@ class API_EVENTS_LIST {
     public List<News> data;
     public Pagination pagination;
     public boolean status;
+}
+
+class API_PERSON_LIST {
+    public int status;
+    public String message;
+    public List<Person> data;
 }
 
 class Pagination {

@@ -18,6 +18,8 @@ public class NewsRepository {
     private NewsDao mNewsDao;
     private LiveData<News> mSelectedNews;
 
+    private LiveData<Person> mSelectedPerson;
+
     private LiveData<EntityData> mSelectedEntityData;
 
     private LiveData<NewsList> mGetNewsList;
@@ -26,6 +28,8 @@ public class NewsRepository {
     private LiveData<NewsList> mGetSearchList;
 
     private LiveData<NewsList> mGetWatchedList;
+
+    private LiveData<PersonList> mGetAllPersonList;
 
     private LiveData<EntityDataList> mGetSearchEntityDataList;
 
@@ -48,6 +52,8 @@ public class NewsRepository {
 
         mSelectedNews = mNewsDao.getSelectedNews();
 
+        mSelectedPerson = mNewsDao.getSelectedPerson();
+
         mSelectedEntityData = mNewsDao.getSelectedEntityData();
 
         mGetNewsList = mNewsDao.getNewsList();
@@ -56,6 +62,8 @@ public class NewsRepository {
         mGetSearchList = mNewsDao.getSearchList();
 
         mGetWatchedList = mNewsDao.getWatchedList();
+
+        mGetAllPersonList = mNewsDao.getAllPersonList();
 
         mGetSearchEntityDataList = mNewsDao.getSearchEntityDataList();
 
@@ -94,6 +102,8 @@ public class NewsRepository {
         return mGetWatchedList;
     }
 
+    LiveData<PersonList> getAllPersonList() { return mGetAllPersonList;}
+
     LiveData<EntityDataList> getSearchEntityDataList() {
         return mGetSearchEntityDataList;
     }
@@ -101,6 +111,8 @@ public class NewsRepository {
     LiveData<News> getSelectedNews() {
         return mSelectedNews;
     }
+
+    LiveData<Person> getSelectedPerson() { return mSelectedPerson;}
 
     LiveData<EntityData> getSelectedEntityData() {
         return mSelectedEntityData;
@@ -186,6 +198,33 @@ public class NewsRepository {
             begin_day.addOne();
         }
         return result;
+    }
+
+    void flushPerson() {
+        NewsRoomDatabase.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (db) {
+                    List<Person> personList = new ArrayList<>();
+                    List<Person> append_person = null;
+                    try {
+                        append_person = new RemoteServiceManager().flushPerson();
+                    }
+                    catch( MyException e) {
+                        e.printStackTrace();
+                    }
+                    if(append_person != null) {
+                        personList.addAll(append_person);
+                    }
+                    PersonList myList = new PersonList("all");
+                    for(Person person : personList) {
+                        myList.list.add(person);
+                        mNewsDao.insert(person);
+                    }
+                    mNewsDao.insert(myList);
+                }
+            }
+        });
     }
 
     void flushNews(final String type) {
@@ -362,6 +401,30 @@ public class NewsRepository {
                         }
                     }
                     mNewsDao.insert(fatherList);
+                }
+            }
+        });
+    }
+
+    void getPersonById(final String id) {
+        NewsRoomDatabase.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (db) {
+                    List<Person> list = mNewsDao.getNormalSelectedPerson();
+                    for(Person item : list) {
+                        item.selected = 0;
+                        mNewsDao.insert(item);
+                    }
+                    Person current_person = mNewsDao.getPersonById(id);
+                    if(current_person.avatar != null && current_person.avatar.length() > 0) {
+                        current_person.bitmap = BitmapByteArrayConverter.BitmapToByteArray(new RemoteServiceManager().getBitmapByUrl(current_person.avatar));
+                    }
+                    else {
+                        current_person.bitmap = null;
+                    }
+                    current_person.selected = 1;
+                    mNewsDao.insert(current_person);
                 }
             }
         });

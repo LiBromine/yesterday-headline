@@ -18,9 +18,15 @@ public class NewsViewModel extends AndroidViewModel {
 
     private LiveData<NewsList> mWatchedList;
 
+    private LiveData<PersonList> mAllPersonList;
+
     private LiveData<News> mGetSelectedNews;
 
+    private LiveData<Person> mGetSelectedPerson;
+
     private LiveData<EntityData> mGetSelectedEntityData;
+
+    private LiveData<EntityDataList> mGetSearchEntityDataList;
 
     private LiveData<StringList> mGetCountriesList;
     private LiveData<StringList> mGetProvincesList;
@@ -39,7 +45,11 @@ public class NewsViewModel extends AndroidViewModel {
 
         mWatchedList = mRepository.getWatchedList();
 
+        mAllPersonList = mRepository.getAllPersonList();
+
         mGetSelectedNews = mRepository.getSelectedNews();
+
+        mGetSelectedPerson = mRepository.getSelectedPerson();
 
         mGetSelectedEntityData = mRepository.getSelectedEntityData();
 
@@ -48,6 +58,8 @@ public class NewsViewModel extends AndroidViewModel {
         mGetCountiesList = mRepository.getCountiesList();
 
         mSelectedEpidemicInfo = mRepository.getSelectedEpidemicInfo();
+
+        mGetSearchEntityDataList = mRepository.getSearchEntityDataList();
     }
 
     LiveData<NewsList> getListByType(String type) {
@@ -80,8 +92,16 @@ public class NewsViewModel extends AndroidViewModel {
         return null;
     }
 
+    LiveData<EntityDataList> getSearchEntityDataList() {
+        return mGetSearchEntityDataList;
+    }
+
     LiveData<List<EpidemicInfo>> getSelectedEpidemicInfo() {
         return mSelectedEpidemicInfo;
+    }
+
+    LiveData<PersonList> getAllPersonList() {
+        return mAllPersonList;
     }
 
     void getProvincesOfCountry(String country) {
@@ -120,12 +140,18 @@ public class NewsViewModel extends AndroidViewModel {
         mRepository.getNewsById(target_id);
     }
 
+    void getPersonById(String target_id) { mRepository.getPersonById(target_id);}
+
     void getEntityDataByUrl(String url) {
         mRepository.getEntityDataByUrl(url);
     }
 
     void getWatchedNews() {
         mRepository.getWatchedNews();
+    }
+
+    void flushPerson() {
+        mRepository.flushPerson();;
     }
 
     void searchNewsByKeyword(final String keyword) {
@@ -136,11 +162,19 @@ public class NewsViewModel extends AndroidViewModel {
         return mGetSelectedNews;
     }
 
+    LiveData<Person> getSelectedPerson() {
+        return mGetSelectedPerson;
+    }
+
     LiveData<EntityData> getSelectedEntityData() {
         return mGetSelectedEntityData;
     }
 
     boolean isEpidemicDataReady() {
         return mRepository.getIsEpidemicDataReady();
+    }
+
+    void searchEntityDataByKeyword(final String keyword) {
+        mRepository.searchEntityDataListByKeyword(keyword);
     }
 }
