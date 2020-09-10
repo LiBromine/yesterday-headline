@@ -28,6 +28,7 @@ public class CollectionAdapter extends FragmentStateAdapter {
         if (categoryList != null) {
             // TODO, create special fragment
             Log.v("debug", "create a fragment in " + categoryList.get(position) + " type");
+            Log.v("debug", "createFragment  Thread.currentThread().getId() = " + Thread.currentThread().getId());
             if ((categoryList.get(position).equals("news") || categoryList.get(position).equals("paper"))) {
                 fragment = new ListItemFragment();
             } else if (categoryList.get(position).equals("covid")) {

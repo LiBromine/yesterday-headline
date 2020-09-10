@@ -37,6 +37,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.iterators.ObjectArrayIterator;
+
 public class CovidDataFragment extends Fragment {
     private NewsViewModel mViewModel;
 
@@ -130,7 +133,7 @@ public class CovidDataFragment extends Fragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String country = mSpinnerCountry.getSelectedItem().toString();
                 Log.w("debug", "country listener get " + country);
-                mViewModel.getProvinceByCountry(country);
+                mViewModel.getProvincesOfCountry(country);
                 mSpinnerCounty.setAdapter(nullAdapter);
             }
 
@@ -143,7 +146,7 @@ public class CovidDataFragment extends Fragment {
                 Object country = mSpinnerCountry.getSelectedItem();
                 Object province = mSpinnerProvince.getSelectedItem();
                 if (country != null && province != null) {
-                    mViewModel.getCountyByProvince(country.toString(), province.toString());
+                    mViewModel.getCountiesOfProvince(country.toString(), province.toString());
                 }
             }
 
@@ -153,32 +156,94 @@ public class CovidDataFragment extends Fragment {
     }
 
     private void initViewModel(View view) {
+        Log.v("debug", "initViewModel");
         mViewModel = new ViewModelProvider(this).get(NewsViewModel.class);
-        mViewModel.getCountryList().observe(this, new Observer<List<String>>() {
+        mViewModel.getStringListByType("countries").observe(this, new Observer<StringList>() {
             @Override
-            public void onChanged(List<String> strings) {
-//                countryList = strings;
-//                Collections.sort(countryList);
-//                ArrayAdapter<String> newAdapter = new ArrayAdapter<>(MainActivity.context, R.layout.support_simple_spinner_dropdown_item, countryList);
-//                mSpinnerCountry.setAdapter(newAdapter);
+            public void onChanged(StringList stringList) {
+                boolean flag = true;
+                if(countryList == null || stringList.nameList.size() != countryList.size()) {
+                    flag = false;
+                }
+                else {
+                    for(int i = 0; i < countryList.size(); ++i)
+                        if(!countryList.get(i).equals(stringList.nameList.get(i))) {
+                            flag  = false;
+                            break;
+                        }
+                }
+                if(flag) {
+                    return;
+                }
+                countryList = new ArrayList<>();
+                CollectionUtils.addAll(countryList, new String[stringList.nameList.size()]);
+                Collections.copy(countryList,stringList.nameList);
+
+
+                // countryList = stringList.nameList;
+                // Don't need to sort, because zms sort in the backend
+                // Collections.sort(countryList);
+                ArrayAdapter<String> newAdapter = new ArrayAdapter<>(MainActivity.context, R.layout.support_simple_spinner_dropdown_item, countryList);
+                mSpinnerCountry.setAdapter(newAdapter);
             }
         });
 
-        mViewModel.getProvinceList().observe(this, new Observer<List<String>>() {
+        mViewModel.getStringListByType("provinces").observe(this, new Observer<StringList>() {
             @Override
-            public void onChanged(List<String> strings) {
-                provinceList = strings;
-                Collections.sort(provinceList);
+            public void onChanged(StringList stringList) {
+                boolean flag = true;
+                if(provinceList == null || stringList == null || provinceList.size() != stringList.nameList.size()) {
+                    flag = false;
+                }
+                else {
+                    for(int i = 0; i < provinceList.size(); ++i)
+                        if(!provinceList.get(i).equals(stringList.nameList.get(i))) {
+                            flag  = false;
+                            break;
+                        }
+                }
+                if(flag) {
+                    return;
+                }
+                if(stringList != null ) {
+                    provinceList = stringList.nameList;
+                }
+                else {
+                    provinceList = new ArrayList<>();
+                }
+                // Don't need to sort, because zms sort in the backend
+                // Collections.sort(provinceList);
                 ArrayAdapter<String> newAdapter = new ArrayAdapter<>(MainActivity.context, R.layout.support_simple_spinner_dropdown_item, provinceList);
                 mSpinnerProvince.setAdapter(newAdapter);
             }
         });
 
-        mViewModel.getCountyList().observe(this, new Observer<List<String>>() {
+        mViewModel.getStringListByType("counties").observe(this, new Observer<StringList>() {
             @Override
-            public void onChanged(List<String> strings) {
-                countyList = strings;
-                Collections.sort(countyList);
+            public void onChanged(StringList stringList) {
+                boolean flag = true;
+                if(countyList == null || stringList == null || countyList.size() != stringList.nameList.size()) {
+                    flag = false;
+                }
+                else {
+                    for(int i = 0; i < countyList.size(); ++i)
+                        if(!countyList.get(i).equals(stringList.nameList.get(i))) {
+                            flag  = false;
+                            break;
+                        }
+                }
+                if(flag) {
+                    ArrayAdapter<String> newAdapter = new ArrayAdapter<>(MainActivity.context, R.layout.support_simple_spinner_dropdown_item, countyList);
+                    mSpinnerCounty.setAdapter(newAdapter);
+                    return;
+                }
+                if(stringList != null) {
+                    countyList = stringList.nameList;
+                }else {
+                    countyList = new ArrayList<>();
+                }
+                //Don't need to sort, because zms sort in the backend
+                //Collections.sort(countyList);
                 ArrayAdapter<String> newAdapter = new ArrayAdapter<>(MainActivity.context, R.layout.support_simple_spinner_dropdown_item, countyList);
                 mSpinnerCounty.setAdapter(newAdapter);
             }
