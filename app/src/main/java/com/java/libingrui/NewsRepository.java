@@ -106,12 +106,18 @@ public class NewsRepository {
         return mSelectedEntityData;
     }
 
-    void updateEpidemicData() {
+    void updateEpidemicData() throws MyException{
         NewsRoomDatabase.databaseWriteExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 Log.v("debug", "upd EpiData net service begin");
-                Map<RegionName, DaysEpidemicData> data = new RemoteServiceManager().getEpidemicData();
+                Map<RegionName, DaysEpidemicData> data = null;
+                try {
+                    data = new RemoteServiceManager().getEpidemicData();
+                }
+                catch( MyException e) {
+                    e.printStackTrace();
+                }
                 Set<Entry<RegionName, DaysEpidemicData> > entries = data.entrySet();
 
                 Log.v("debug", "upd EpiData net service end");
@@ -129,6 +135,14 @@ public class NewsRepository {
                     info.data = datas;
                     info.selected = 0;
                     epidemicInfos.add(info);
+                    if(info.region.country.equals("China") && info.region.province.equals("total")) {
+                        Day tmp = new Day(begin_date);
+                        Log.v("debug", "begin_date="+begin_date+" "+tmp.year+" "+tmp.month+" "+tmp.date);
+                        Log.v("debug", "begin=" + begin_date + " length=" + day_length);
+                        for(Day day : days) {
+                            Log.v("debug", "day = " + day.year + "/" + day.month + "/" + day.date);
+                        }
+                    }
                 }
 
                 Log.v("debug", "upd EpiData map end");
@@ -163,7 +177,12 @@ public class NewsRepository {
 
         Day begin_day = new Day(begin_date);
         for(int i = 0; i < length; ++i) {
-            result.add(begin_day);
+            Day current_day = new Day();
+            current_day.year = begin_day.year;
+            current_day.month = begin_day.month;
+            current_day.date  = begin_day.date;
+            current_day.calcTimeValue();
+            result.add(current_day);
             begin_day.addOne();
         }
         return result;
@@ -188,7 +207,13 @@ public class NewsRepository {
                     int loaded_news_page_count = 0;
                     List<News> current_news = new ArrayList<News>();
                     while(true) {
-                        List<News> append_news = new RemoteServiceManager(NEWS_PER_PAGE, ++loaded_news_page_count).flushNews(type);
+                        List<News> append_news = null;
+                        try {
+                            append_news = new RemoteServiceManager(NEWS_PER_PAGE, ++loaded_news_page_count).flushNews(type);
+                        }
+                        catch (MyException e) {
+                            e.printStackTrace();
+                        }
 
                         if(!isAchieveCachedFirst(cached_mGetNewsList, append_news)) {
                             for (int i = 0; i < append_news.size(); ++i) {
@@ -260,10 +285,19 @@ public class NewsRepository {
 
                     int cnt = (cached_mGetNewsList.list.size() + NEWS_PER_PAGE - 1) / NEWS_PER_PAGE;
 
-                    List<News> current_news = new RemoteServiceManager(NEWS_PER_PAGE, cnt).flushNews(type);
-
+                    List<News> current_news = null;
+                    try {
+                        current_news = new RemoteServiceManager(NEWS_PER_PAGE, cnt).flushNews(type);
+                    }
+                    catch (MyException e) {
+                        e.printStackTrace();
+                    }
                     while(!isAchieveCachedLast(cached_mGetNewsList, current_news)) {
-                        current_news = new RemoteServiceManager(NEWS_PER_PAGE, ++cnt).flushNews(type);
+                        try {
+                            current_news = new RemoteServiceManager(NEWS_PER_PAGE, ++cnt).flushNews(type);
+                        } catch (MyException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     int begin_pos = -1;
@@ -279,7 +313,12 @@ public class NewsRepository {
                     }
 
                     if(begin_pos == current_news.size()) {
-                        current_news = new RemoteServiceManager(NEWS_PER_PAGE, ++cnt).flushNews(type);
+                        try {
+                            current_news = new RemoteServiceManager(NEWS_PER_PAGE, ++cnt).flushNews(type);
+                        }
+                        catch (MyException e){
+                            e.printStackTrace();
+                        }
                         begin_pos = 0;
                     }
                     for(int i = begin_pos; i < current_news.size(); ++i) {
@@ -343,7 +382,12 @@ public class NewsRepository {
                     if(current_data == null) {
                         RemoteServiceManager mangager = new RemoteServiceManager();
                         current_data = new EntityData();
-                        current_data.entityDetails = mangager.getEntityByUrl(url);
+                        try {
+                            current_data.entityDetails = mangager.getEntityByUrl(url);
+                        }
+                        catch (MyException e) {
+                            e.printStackTrace();
+                        }
                         if(current_data.entityDetails.img != null && !current_data.entityDetails.img.equals("")) {
                             current_data.bitmap = BitmapByteArrayConverter.BitmapToByteArray(mangager.getBitmapByUrl(current_data.entityDetails.img));
                         }
@@ -511,8 +555,13 @@ public class NewsRepository {
             @Override
             public void run() {
                 RemoteServiceManager remoteServiceManager = new RemoteServiceManager();
-                List<EntityDetails> entityDetailsList = remoteServiceManager.getEntitiesByKeyWord(keyword);
-
+                List<EntityDetails> entityDetailsList = null;
+                try {
+                    entityDetailsList = remoteServiceManager.getEntitiesByKeyWord(keyword);
+                }
+                catch (MyException e) {
+                    e.printStackTrace();
+                }
                 List<EntityData> result = new ArrayList<EntityData>();
                 for(EntityDetails item : entityDetailsList) {
                     EntityData current = new EntityData();
@@ -540,7 +589,13 @@ public class NewsRepository {
             @Override
             public void run() {
                 RemoteServiceManager remoteServiceManager = new RemoteServiceManager();
-                List<EntityDetails> entityDetailsList = remoteServiceManager.getEntitiesByKeyWord(keyword);
+                List<EntityDetails> entityDetailsList = null;
+                try {
+                    entityDetailsList = remoteServiceManager.getEntitiesByKeyWord(keyword);
+                }
+                catch (MyException e) {
+                    e.printStackTrace();
+                }
                 List<News> relatedNews = new ArrayList<News>();
                 Set<String> event_ids = new HashSet<String>();
                 for(EntityDetails entity : entityDetailsList) {
@@ -573,7 +628,12 @@ public class NewsRepository {
                     for(String event_id : event_ids) {
                         News news = mNewsDao.getNewsById(event_id);
                         if(news == null) {
-                            news = remoteServiceManager.getNewsById(event_id);
+                            try {
+                                news = remoteServiceManager.getNewsById(event_id);
+                            }
+                            catch (MyException e) {
+                                e.printStackTrace();
+                            }
                         }
                         if(news != null) {
                             relatedNews.add(news);

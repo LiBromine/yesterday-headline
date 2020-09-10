@@ -58,7 +58,12 @@ public class MainActivity extends AppCompatActivity {
 
         // update covid data in Main Activity
         mNewsViewModel = new ViewModelProvider(this).get(NewsViewModel.class);
-        mNewsViewModel.updateEpidemicData();
+        try {
+            mNewsViewModel.updateEpidemicData();
+        }
+        catch(MyException e) {
+            e.printStackTrace();
+        }
     }
 
     public void initListCollectionFragment() {

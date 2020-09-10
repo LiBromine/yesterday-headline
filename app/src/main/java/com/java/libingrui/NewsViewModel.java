@@ -104,7 +104,7 @@ public class NewsViewModel extends AndroidViewModel {
         mRepository.getEpidemicInfoByCountryOfProvinces(country);
     }
 
-    void updateEpidemicData() {
+    void updateEpidemicData() throws MyException{
         mRepository.updateEpidemicData();
     }
 

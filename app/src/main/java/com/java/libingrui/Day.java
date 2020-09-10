@@ -11,10 +11,13 @@ public class Day {
      * @param date
      */
     public Day(String date) {
-        year = Integer.parseInt(date.substring(0,4));
-        month = Integer.parseInt(date.substring(5,7));
-        this.date = Integer.parseInt(date.substring(8,10));
+        year = Integer.parseInt(date.substring(0, 4));
+        month = Integer.parseInt(date.substring(5, 7));
+        this.date = Integer.parseInt(date.substring(8, 10));
+        calcTimeValue();
+    }
 
+    public void calcTimeValue() {
         timeValue = year * 10000 + month * 100 + this.date;
     }
 

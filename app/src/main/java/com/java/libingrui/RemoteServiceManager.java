@@ -51,6 +51,7 @@ public class RemoteServiceManager {
                 for (News news : api_events_list.data) {
                     news.selected = 0;
                 }
+                result.addAll(api_events_list.data);
             }
         }
         Log.v("debug", "from url get size=" + result.size());
@@ -150,7 +151,6 @@ public class RemoteServiceManager {
         else result.province = "total";
         if(strings.size() >= 3) result.county = strings.get(2);
         else result.county = "total";
-        Log.v("debug", result.country + " " + result.province + " " + result.county);
         return result;
     }
 
