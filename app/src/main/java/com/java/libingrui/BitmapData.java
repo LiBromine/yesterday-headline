@@ -11,6 +11,9 @@ public class BitmapData {
     public String url;
 
     public byte[] bitmap;
+    public int height;
+    public int width;
+    public String name;
 
     public int selected;
 }

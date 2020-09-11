@@ -16,6 +16,8 @@ import android.os.Looper;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -109,9 +111,12 @@ public class EntityActivity extends AppCompatActivity {
         mNewsViewModel.getSelectedBitmapData().observe(this, new Observer<BitmapData>() {
             @Override
             public void onChanged(BitmapData bitmapData) {
-//                if (bitmapData != null) {
-//                    imageView.setImageBitmap(BitmapFactory.decodeByteArray(bitmapData.bitmap, 0, bitmapData.bitmap.length));
-//                }
+                Log.v("debug",  "bitmap data onChanged");
+                if (bitmapData != null) {
+                    Log.v("debug", "bitmap data not null");
+                    Log.v("debug", "length="+bitmapData.bitmap.length+" bitmap="+bitmapData.bitmap.toString());
+                    imageView.setImageBitmap(BitmapByteArrayConverter.ByteArrayToBitmap(bitmapData));
+                }
             }
         });
     }
