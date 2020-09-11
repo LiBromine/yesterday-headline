@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_horizontal|center_vertical"
-            android:text="Nothing Here..."
+            android:text="Nothing Here...\nPlease Click the search \non the top left"
             android:textSize="25dp"
             android:textStyle="bold"
             />

@@ -1,6 +1,7 @@
 package com.java.libingrui;
 
 import android.content.Context;
+import android.net.nsd.NsdManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ public class ListItemViewAdapter extends RecyclerView.Adapter<ListItemViewAdapte
     private NewsList mList;
     private Context mContext;
     private OnItemClickListener mOnItemClickListener;
+    private boolean needCompress;
     public static int TITLE_TRUNCATE = 30;
     public static int CONTENT_TRUNCATE = 30;
 
@@ -49,7 +51,7 @@ public class ListItemViewAdapter extends RecyclerView.Adapter<ListItemViewAdapte
     // Provide a suitable constructor (depends on the kind of dataset)
     public ListItemViewAdapter(Context c) {
         mContext = c;
-        //
+        needCompress = true;
     }
 
     // Create new views (invoked by the layout manager)
@@ -68,8 +70,13 @@ public class ListItemViewAdapter extends RecyclerView.Adapter<ListItemViewAdapte
         // - replace the contents of the view with that element
         if (mList != null && mList.list != null) {
             News item = mList.list.get(position);
-            holder.titleView.setText(compressTitle(item.title));
-            holder.textView.setText(compressContent(item.content));
+            if (needCompress) {
+                holder.titleView.setText(compressTitle(item.title));
+                holder.textView.setText(compressContent(item.content));
+            } else {
+                holder.titleView.setText((item.title));
+                holder.textView.setText((item.content));
+            }
             String source = item.source + "  " + item.date;
             holder.srcView.setText(source);
             holder.idView.setText(item._id);
@@ -112,6 +119,12 @@ public class ListItemViewAdapter extends RecyclerView.Adapter<ListItemViewAdapte
 
     void setNewsList(NewsList list) {
         mList = list;
+        notifyDataSetChanged();
+    }
+
+    void setNewsList(NewsList list, boolean compressed) {
+        mList = list;
+        needCompress = compressed;
         notifyDataSetChanged();
     }
 

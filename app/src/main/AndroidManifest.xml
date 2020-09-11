@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".HistoryActivity"></activity>
+        <activity android:name=".ClusterListActivity"></activity>
+        <activity android:name=".HistoryActivity" />
         <activity android:name=".EntityActivity" />
         <activity android:name=".EntityListActivity" />
         <activity android:name=".SearchActivity">

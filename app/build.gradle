@@ -76,5 +76,6 @@ dependencies {
     // https://mvnrepository.com/artifact/org.apache.commons/commons-collections4
     implementation 'org.apache.commons:commons-collections4:4.1'
 
-
+    // flow Layout
+    implementation 'com.hyman:flowlayout-lib:1.1.2'
 }

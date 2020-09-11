@@ -70,9 +70,11 @@ public class ListCollectionFragment extends Fragment {
             categoryList = new ArrayList<>();
             categoryList.add("news");
             categoryList.add("paper");
-            categoryList.add("covid");
+
             categoryList.add("graph");
+            categoryList.add("cluster");
             categoryList.add("scholar");
+            categoryList.add("covid");
         }
         if (uncategoryList == null) {
             uncategoryList = new ArrayList<>();
