@@ -6,7 +6,9 @@ import androidx.lifecycle.LiveData;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import android.graphics.Bitmap;
@@ -14,6 +16,8 @@ import android.util.Log;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import java.util.stream.Collectors;
 
 public class NewsRepository {
     private NewsDao mNewsDao;
@@ -168,7 +172,34 @@ public class NewsRepository {
                     int type_cnt = manager.getType_cnt();
                     StringList typeList = new StringList("keywords");
                     for(int i = 0; i < type_cnt; ++i) {
-                        typeList.nameList.add(manager.getKeywordsByType(i));
+                       // typeList.nameList.add(manager.getKeywordsByType(i));
+                        Map<String,Integer> map = new LinkedHashMap<>();
+                        int news_cnt = 0;
+                        for(int j = 0; j < list.size(); ++j)
+                            if(manager.getTypeByPos(j) == i) {
+                                ++news_cnt;
+                                for(String str : list.get(j).seg_text.split("")) {
+                                    int cnt = (map.containsKey(str) ? map.get(str) : 0);
+                                    ++cnt;
+                                    map.put(str,cnt);
+                                }
+                            }
+                        map = sortMapByValues(map);
+                        int pos = 0;
+                        StringBuilder buffer = new StringBuilder();
+                        for(Entry<String, Integer> entry : map.entrySet()) {
+                            buffer.append(entry.getKey() + " ");
+                            Log.v("debug", "key="+entry.getKey());
+                            ++pos;
+                            if(pos >= 10) break;
+                        //    if(news_cnt < 10 && pos >= 2) break;
+                        }
+                        if(i <= 10) {
+                            typeList.nameList.add(manager.getKeywordsByType(i));
+                        }
+                        else {
+                            typeList.nameList.add(buffer.toString());
+                        }
                     }
                     for(int i = 0; i < list.size(); ++i) {
                         list.get(i).cluster_type = manager.getTypeByPos(i);
@@ -185,6 +216,14 @@ public class NewsRepository {
                 }
             }
         });
+    }
+    public static <K extends Comparable, V extends Comparable> Map<K, V> sortMapByValues(Map<K, V> aMap) {
+        HashMap<K, V> finalOut = new LinkedHashMap<>();
+        aMap.entrySet()
+                .stream()
+                .sorted((p1, p2) -> p2.getValue().compareTo(p1.getValue()))
+                .collect(Collectors.toList()).forEach(ele -> finalOut.put(ele.getKey(), ele.getValue()));
+        return finalOut;
     }
 
     void getBitmapDataByUrl(final String url) throws MyException {

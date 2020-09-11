@@ -4,11 +4,25 @@ public class NewsClusterManager {
 
     private int type_cnt;
     private int[] type;
+    private String[] type_name;
 
     NewsClusterManager() {
         //TODO get real type count here
         type_cnt = 11;
         type = new int[699];
+        type_name = new String[type_cnt];
+        type_name[0] = "病毒 大学 新冠 研究";
+        type_name[1] = "伦理 规范 新冠";
+        type_name[2] = "科技 项目 攻关";
+        type_name[3] = "约翰 约翰斯 霍普金斯";
+        type_name[4] = "病毒 有助 大学";
+        type_name[5] = "新冠 肺炎 病理";
+        type_name[6] = "荷兰";
+        type_name[7] = "高福 重磅";
+        type_name[8] = "病毒";
+        type_name[9] = "艾滋";
+        type_name[10] = "首都 机场";
+
         type[0]=0;
         type[1]=0;
         type[2]=0;
@@ -717,7 +731,7 @@ public class NewsClusterManager {
 
     public String getKeywordsByType(int type) {
         //TODO get real keywords[type] here
-        return "This is news cluster type " + type;
+        return type_name[type];
     }
 
     public int getType_cnt() { return type_cnt;}
