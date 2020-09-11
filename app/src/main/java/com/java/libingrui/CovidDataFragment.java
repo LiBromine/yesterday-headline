@@ -173,6 +173,9 @@ public class CovidDataFragment extends Fragment {
                     }
                     if (i == n) {
                         Toast.makeText(getContext(), "没有这一天的数据哦", Toast.LENGTH_SHORT).show();
+                        ctv.setText("");
+                        cutv.setText("");
+                        dtv.setText("");
                     }
                 } else {
                     Toast.makeText(getContext(), "请先查找某个地区数据", Toast.LENGTH_SHORT).show();
