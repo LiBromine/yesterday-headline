@@ -50,6 +50,8 @@ public class ScholarAdapter extends RecyclerView.Adapter<ScholarAdapter.MyHolder
             holder.nameV.setText(p.name + "/" + p.name_zh);
             holder.affiliationV.setText(pf.affiliation);
             holder.positionV.setText(pf.position);
+            holder.idV.setText(p.id);
+            holder.imgV.setText(p.avatar);
         }
     }
 
@@ -71,10 +73,11 @@ public class ScholarAdapter extends RecyclerView.Adapter<ScholarAdapter.MyHolder
 
     public static class MyHolder extends RecyclerView.ViewHolder {
         public CardView root;
-        public ImageView imgV;
+        public TextView imgV;
         public TextView nameV;
         public TextView affiliationV;
         public TextView positionV;
+        public TextView idV;
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);
@@ -82,6 +85,7 @@ public class ScholarAdapter extends RecyclerView.Adapter<ScholarAdapter.MyHolder
             nameV = itemView.findViewById(R.id.scholar_name);
             affiliationV = itemView.findViewById(R.id.scholar_affiliation);
             positionV = itemView.findViewById(R.id.scholar_position);
+            idV = itemView.findViewById(R.id.scholar_id);
         }
     }
 }

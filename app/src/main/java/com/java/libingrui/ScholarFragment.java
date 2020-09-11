@@ -17,6 +17,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.w3c.dom.Text;
+
 public class ScholarFragment extends Fragment {
     private RecyclerView mRecycler;
     private ScholarAdapter mAdapter;
@@ -69,14 +71,19 @@ public class ScholarFragment extends Fragment {
         mAdapter.setOnItemClickListener(new ScholarAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-//                TODO, start the last new Activity
-//                TextView idReg = view.findViewById(R.id.news_brief_id);
-//                String id = idReg.getText().toString();
-//                mViewModel.getNewsById(id);
-//
-//                Intent intent = new Intent(getContext(), NewsActivity.class);
-//                intent.putExtra(MainActivity.ID, id);
-//                startActivity(intent);
+                TextView idReg = view.findViewById(R.id.scholar_id);
+                TextView imgReg = view.findViewById(R.id.scholar_img);
+                String id = idReg.getText().toString();
+                String img = imgReg.getText().toString();
+                mNewsViewModel.getPersonById(id);
+                try {
+                    mNewsViewModel.getBitmapDataByUrl(img);
+                } catch (Exception e) { }
+
+                Intent intent = new Intent(getContext(), ScholarDetailActivity.class);
+                intent.putExtra(MainActivity.ID, id);
+//                intent.putExtra(IMG, img);
+                startActivity(intent);
             }
         });
         mRecycler.setAdapter(mAdapter);
