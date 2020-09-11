@@ -208,12 +208,15 @@ public class NewsRepository {
                         if(url == null || url.length() == 0) {
                             return;
                         }
-                        cur_data = BitmapByteArrayConverter.BitmapToByteArray(new RemoteServiceManager().getBitmapByUrl(url));
-                        cur_data.url = url;
-                        cur_data.selected = 1;
-                        Log.v("debug", "url="+url);
-                        Log.v("debug", "length="+cur_data.bitmap.length);
-                        mNewsDao.insert(cur_data);
+                        Bitmap cur_bitmap = new RemoteServiceManager().getBitmapByUrl(url);
+                        if(cur_bitmap != null) {
+                            cur_data = BitmapByteArrayConverter.BitmapToByteArray(cur_bitmap);
+                            cur_data.url = url;
+                            cur_data.selected = 1;
+                            Log.v("debug", "url="+url);
+                            Log.v("debug", "length="+cur_data.bitmap.length);
+                            mNewsDao.insert(cur_data);
+                        }
                     }
                 }
             }
