@@ -37,6 +37,8 @@ public class CollectionAdapter extends FragmentStateAdapter {
                 fragment = EntityFragment.newInstance();
             } else if (categoryList.get(position).equals("cluster")) {
                 fragment = ClusterFragment.newInstance();
+            } else if (categoryList.get(position).equals("scholar")) {
+                fragment = ScholarFragment.newInstance();
             }
         }
 
