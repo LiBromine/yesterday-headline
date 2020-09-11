@@ -390,7 +390,10 @@ class MyValueFormatter extends ValueFormatter {
 
     @Override
     public String getAxisLabel(float value, AxisBase axis) {
-        Day day = info.day.get((int)value);
-        return day.month + "-" + day.date;
+        if(info.day.size() > (int)value) {
+            Day day = info.day.get((int) value);
+            return day.month + "-" + day.date;
+        }
+        return "";
     }
 }
