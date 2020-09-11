@@ -29,6 +29,8 @@ public class NewsRepository {
 
     private LiveData<NewsList> mGetWatchedList;
 
+    private LiveData<NewsList> mGetEventList;
+
     private LiveData<PersonList> mGetAllPersonList;
 
     private LiveData<EntityDataList> mGetSearchEntityDataList;
@@ -42,6 +44,8 @@ public class NewsRepository {
     private LiveData<List<EpidemicInfo>> mSelectedEpidemicInfoList;
 
     private LiveData<BitmapData> mSelectedBitmapData;
+
+    private LiveData<StringList> mGetKeywordsList;
 
     private final int NEWS_PER_PAGE = 5;
 
@@ -67,6 +71,8 @@ public class NewsRepository {
 
         mGetWatchedList = mNewsDao.getWatchedList();
 
+        mGetEventList = mNewsDao.getEventList();
+
         mGetAllPersonList = mNewsDao.getAllPersonList();
         mGetPassedAwayPersonList = mNewsDao.getPassedAwayPersonList();
 
@@ -75,6 +81,8 @@ public class NewsRepository {
         mGetCountriesList = mNewsDao.getCountriesStringList();
         mGetProvincesList = mNewsDao.getProvincesStringList();
         mGetCountiesList = mNewsDao.getCountiesStringList();
+
+        mGetKeywordsList = mNewsDao.getKeywordsStringList();
 
         mSelectedEpidemicInfoList = mNewsDao.getSelectedEpidemicInfo();
 
@@ -88,6 +96,8 @@ public class NewsRepository {
     LiveData<StringList> getProvincesList() { return mGetProvincesList;}
 
     LiveData<StringList> getCountiesList() { return mGetCountiesList;}
+
+    LiveData<StringList> getKeywordsList() { return mGetKeywordsList;}
 
     LiveData<List<EpidemicInfo>> getSelectedEpidemicInfo() {
         return mSelectedEpidemicInfoList;
@@ -109,6 +119,10 @@ public class NewsRepository {
         return mGetWatchedList;
     }
 
+    LiveData<NewsList> getEventList() {
+        return mGetEventList;
+    }
+
     LiveData<PersonList> getAllPersonList() { return mGetAllPersonList;}
 
     LiveData<PersonList> getPassedAwayPersonList() { return mGetPassedAwayPersonList;}
@@ -128,6 +142,49 @@ public class NewsRepository {
     }
 
     LiveData<BitmapData> getSelectedBitmapData() { return mSelectedBitmapData;}
+
+    void getEventListByType(final int type) {
+        NewsRoomDatabase.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (db) {
+                    List<News> list = mNewsDao.getEventListByType(type);
+                    NewsList current_list = new NewsList("event");
+                    current_list.list = list;
+                    mNewsDao.insert(current_list);
+                }
+            }
+        });
+    }
+
+    void flushEventNews() {
+        NewsRoomDatabase.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    List<News> list = new RemoteServiceManager(700,1).flushNews("event");
+                    NewsClusterManager manager = new NewsClusterManager();
+                    int type_cnt = manager.getType_cnt();
+                    StringList typeList = new StringList("keywords");
+                    for(int i = 0; i < type_cnt; ++i) {
+                        typeList.nameList.add(manager.getKeywordsByType(i));
+                    }
+                    for(int i = 0; i < list.size(); ++i) {
+                        list.get(i).cluster_type = manager.getTypeByPos(i);
+                    }
+                    synchronized (db) {
+                        for(News news : list) {
+                            mNewsDao.insert(news);
+                        }
+                        mNewsDao.insert(typeList);
+                    }
+                }
+                catch (MyException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
     void getBitmapDataByUrl(final String url) throws MyException {
         NewsRoomDatabase.databaseWriteExecutor.execute(new Runnable() {
@@ -511,7 +568,6 @@ public class NewsRepository {
                             e.printStackTrace();
                         }
                     }
-                    Log.v("debug", "result="+current_data.entityDetails.label);
                     current_data.selected = 1;
                     mNewsDao.insert(current_data);
                 }

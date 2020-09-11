@@ -43,7 +43,7 @@ public class RemoteServiceManager {
     public List<News> flushNews(String type) throws MyException{
         String base_url = "https://covid-dashboard.aminer.cn/api/events/list";
         List<News> result = new ArrayList<News>();
-        if( type.equals("news") || type.equals("paper")) {
+        if( type.equals("news") || type.equals("paper") || type.equals("event")) {
             String url = base_url + "?type=" + type + "&page=" + PAGE_NUMBER + "&size=" + NEWS_PER_PAGE;
 
             String json = remoteGET(url);
@@ -131,9 +131,6 @@ public class RemoteServiceManager {
             Gson gson = new Gson();
             API_GETENTITIESBYKEYWORD api_getentitiesbykeyword = gson.fromJson(json, API_GETENTITIESBYKEYWORD.class);
             list.addAll(api_getentitiesbykeyword.data);
-            for(EntityRelation item : api_getentitiesbykeyword.data.get(0).abstractInfo.COVID.relations) {
-                Log.v("debug", "network: " + item.relation + "/" + item.forward + "/" + item.label);
-            }
         }
         Log.v("debug", "keyword entity size=" + list.size());
         return list;
