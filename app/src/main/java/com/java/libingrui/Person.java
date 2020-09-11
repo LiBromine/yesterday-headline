@@ -48,6 +48,5 @@ public class Person {
     public boolean is_passedaway;
 
     public int selected;
-    public byte[] bitmap;
 }
 

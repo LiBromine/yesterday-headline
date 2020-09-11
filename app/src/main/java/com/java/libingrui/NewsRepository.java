@@ -41,6 +41,8 @@ public class NewsRepository {
 
     private LiveData<List<EpidemicInfo>> mSelectedEpidemicInfoList;
 
+    private LiveData<BitmapData> mSelectedBitmapData;
+
     private final int NEWS_PER_PAGE = 5;
 
     private NewsRoomDatabase db;
@@ -75,6 +77,8 @@ public class NewsRepository {
         mGetCountiesList = mNewsDao.getCountiesStringList();
 
         mSelectedEpidemicInfoList = mNewsDao.getSelectedEpidemicInfo();
+
+        mSelectedBitmapData = mNewsDao.getSelectedBitmapData();
 
         isEpidemicDataReady = false;
     }
@@ -121,6 +125,37 @@ public class NewsRepository {
 
     LiveData<EntityData> getSelectedEntityData() {
         return mSelectedEntityData;
+    }
+
+    LiveData<BitmapData> getSelectedBitmapData() { return mSelectedBitmapData;}
+
+    void getBitmapDataByUrl(final String url) throws MyException {
+        NewsRoomDatabase.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (db) {
+                    List<BitmapData> old_list = mNewsDao.getNormalSelectedBitmapData();
+                    if(old_list != null) {
+                        for(BitmapData data : old_list) {
+                            data.selected = 0;
+                            mNewsDao.insert(data);
+                        }
+                    }
+                    BitmapData cur_data = mNewsDao.getBitmapDataByUrl(url);
+                    if(cur_data != null) {
+                        cur_data.selected = 1;
+                        mNewsDao.insert(cur_data);
+                    }
+                    else {
+                        cur_data = new BitmapData();
+                        cur_data.url = url;
+                        cur_data.selected = 1;
+                        cur_data.bitmap = BitmapByteArrayConverter.BitmapToByteArray(new RemoteServiceManager().getBitmapByUrl(url));
+                        mNewsDao.insert(cur_data);
+                    }
+                }
+            }
+        });
     }
 
     void updateEpidemicData() throws MyException{
@@ -257,6 +292,7 @@ public class NewsRepository {
                         }
                         catch (MyException e) {
                             e.printStackTrace();
+                            return;
                         }
 
                         if(!isAchieveCachedFirst(cached_mGetNewsList, append_news)) {
@@ -335,12 +371,14 @@ public class NewsRepository {
                     }
                     catch (MyException e) {
                         e.printStackTrace();
+                        return;
                     }
                     while(!isAchieveCachedLast(cached_mGetNewsList, current_news)) {
                         try {
                             current_news = new RemoteServiceManager(NEWS_PER_PAGE, ++cnt).flushNews(type);
                         } catch (MyException e) {
                             e.printStackTrace();
+                            return;
                         }
                     }
 
@@ -362,6 +400,7 @@ public class NewsRepository {
                         }
                         catch (MyException e){
                             e.printStackTrace();
+                            return;
                         }
                         begin_pos = 0;
                     }
@@ -384,6 +423,7 @@ public class NewsRepository {
     }
 
     void getNewsById(final String id) {
+        Log.v("debug", "getNewsById="+id);
         NewsRoomDatabase.databaseWriteExecutor.execute(new Runnable() {
             @Override
             public void run() {
@@ -394,6 +434,9 @@ public class NewsRepository {
                         mNewsDao.updateNews(item);
                     }
                     News current_news = mNewsDao.getNewsById(id);
+                    if(current_news == null) {
+                        return;
+                    }
                     current_news.selected = 1;
                     current_news.is_watched = 1;
                     mNewsDao.updateNews(current_news);
@@ -422,12 +465,6 @@ public class NewsRepository {
                         mNewsDao.insert(item);
                     }
                     Person current_person = mNewsDao.getPersonById(id);
-                    if(current_person.avatar != null && current_person.avatar.length() > 0) {
-                        current_person.bitmap = BitmapByteArrayConverter.BitmapToByteArray(new RemoteServiceManager().getBitmapByUrl(current_person.avatar));
-                    }
-                    else {
-                        current_person.bitmap = null;
-                    }
                     current_person.selected = 1;
                     mNewsDao.insert(current_person);
                 }
@@ -471,12 +508,6 @@ public class NewsRepository {
                         }
                         catch (MyException e) {
                             e.printStackTrace();
-                        }
-                        if(current_data.entityDetails.img != null && !current_data.entityDetails.img.equals("")) {
-                            current_data.bitmap = BitmapByteArrayConverter.BitmapToByteArray(mangager.getBitmapByUrl(current_data.entityDetails.img));
-                        }
-                        else {
-                            current_data.bitmap = null;
                         }
                     }
                     current_data.selected = 1;
@@ -648,16 +679,14 @@ public class NewsRepository {
                     } catch (MyException e) {
                         e.printStackTrace();
                     }
+                    if(entityDetailsList == null) {
+                        entityDetailsList = new ArrayList<>();
+                    }
                     List<EntityData> result = new ArrayList<EntityData>();
                     for (EntityDetails item : entityDetailsList) {
                         EntityData current = new EntityData();
                         current.entityDetails = item;
                         current.selected = 0;
-                        current.bitmap = null;
-                       /* if (current.entityDetails.img != null && !current.entityDetails.img.equals("")) {
-                            Log.v("debug", "load bitmap");
-                            current.bitmap = BitmapByteArrayConverter.BitmapToByteArray(remoteServiceManager.getBitmapByUrl(current.entityDetails.img));
-                        }*/
                         result.add(current);
                     }
 
