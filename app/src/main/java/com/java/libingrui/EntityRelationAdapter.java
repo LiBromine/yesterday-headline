@@ -39,7 +39,11 @@ public class EntityRelationAdapter extends RecyclerView.Adapter<EntityRelationAd
             holder.relationView.setText(mList.get(position).relation);
             holder.labelView.setText(mList.get(position).label);
             if (mList.get(position).forward.equals("true")) {
-                holder.arrowView.setRotation(180f);
+                holder.arrowView.setImageResource(R.drawable.outline_arrow_right_alt_black_18dp);
+//                holder.arrowView.setRotation(180f);
+//                Log.v("debug", mList.get(position).relation + "/" + mList.get(position).forward + "/" + mList.get(position).label + "/rotate");
+            } else {
+                holder.arrowView.setImageResource(R.drawable.outline_arrow_left_alt_black_18dp);
             }
         }
     }
