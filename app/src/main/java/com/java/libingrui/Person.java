@@ -18,7 +18,7 @@ import java.util.List;
 @TypeConverters({
         MapStringToStringConverter.class,
         ListOfStringConverter.class,
-        ListOfIntegerConverter.class,
+        ListOfDoubleConverter.class,
         ListOfEmail_uConverter.class
 })
 public class Person {
@@ -42,7 +42,7 @@ public class Person {
     public int score;
     public String sourcetype;
     public List<String> tags;
-    public List<Integer> tags_score;
+    public List<Double> tags_score;
     public int index;
     public int tab;
     public boolean is_passedaway;

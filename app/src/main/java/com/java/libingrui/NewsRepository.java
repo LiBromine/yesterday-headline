@@ -208,12 +208,15 @@ public class NewsRepository {
                         if(url == null || url.length() == 0) {
                             return;
                         }
-                        cur_data = BitmapByteArrayConverter.BitmapToByteArray(new RemoteServiceManager().getBitmapByUrl(url));
-                        cur_data.url = url;
-                        cur_data.selected = 1;
-                        Log.v("debug", "url="+url);
-                        Log.v("debug", "length="+cur_data.bitmap.length);
-                        mNewsDao.insert(cur_data);
+                        Bitmap cur_bitmap = new RemoteServiceManager().getBitmapByUrl(url);
+                        if(cur_bitmap != null) {
+                            cur_data = BitmapByteArrayConverter.BitmapToByteArray(cur_bitmap);
+                            cur_data.url = url;
+                            cur_data.selected = 1;
+                            Log.v("debug", "url="+url);
+                            Log.v("debug", "length="+cur_data.bitmap.length);
+                            mNewsDao.insert(cur_data);
+                        }
                     }
                 }
             }
@@ -497,7 +500,15 @@ public class NewsRepository {
                     }
                     News current_news = mNewsDao.getNewsById(id);
                     if(current_news == null) {
-                        return;
+                        try {
+                            current_news = new RemoteServiceManager().getNewsById(id);
+                        }
+                        catch (MyException e) {
+                            e.printStackTrace();
+                        }
+                        if(current_news == null) {
+                            return;
+                        }
                     }
                     current_news.selected = 1;
                     current_news.is_watched = 1;
@@ -545,6 +556,26 @@ public class NewsRepository {
                         myList.list.add(person);
                     }
                     mNewsDao.insert(myList);
+                }
+            }
+        });
+    }
+
+    void clearAll() {
+        NewsRoomDatabase.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (db) {
+                    mNewsDao.deleteAllNews();
+                    mNewsDao.deleteAllNewsList();
+                    //mNewsDao.deleteAllEpidemicInfo();
+                    mNewsDao.deleteAllEntityData();
+                    mNewsDao.deleteAllNewsEntityCrossRef();
+                    mNewsDao.deleteAllEntityDataList();
+                    //mNewsDao.deleteAllStringList();
+                    //NewsDao.deleteAllPerson();
+                    //mNewsDao.deleteAllPersonList();
+                    mNewsDao.deleteAllBitmapData();
                 }
             }
         });
@@ -770,6 +801,7 @@ public class NewsRepository {
         NewsRoomDatabase.databaseWriteExecutor.execute(new Runnable() {
             @Override
             public void run() {
+                Log.v("debug", "keyword="+keyword);
                 RemoteServiceManager remoteServiceManager = new RemoteServiceManager();
                 List<EntityDetails> entityDetailsList = null;
                 try {
@@ -794,7 +826,28 @@ public class NewsRepository {
                         relatedNews.add(current_news);
                     }
                 }
+
 */
+                List<News> news_resource = null;
+                try {
+                    news_resource = new RemoteServiceManager(200, 1).flushNews("news");
+                }
+                catch (MyException e) {
+                    e.printStackTrace();
+                }
+                if(news_resource != null) {
+                    for(News news : news_resource) {
+                        if(news.title != null && news.title.contains(keyword)) {
+                            relatedNews.add(news);
+                            continue;
+                        }
+                        if(news.seg_text != null && news.seg_text.contains(keyword)) {
+                            relatedNews.add(news);
+                        }
+                    }
+                }
+
+
                 synchronized (db) {
                     List<String> entity_urls = new ArrayList<String>();
                     for(EntityDetails item : entityDetailsList) {

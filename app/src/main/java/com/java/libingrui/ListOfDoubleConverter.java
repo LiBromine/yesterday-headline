@@ -8,19 +8,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ListOfIntegerConverter {
+public class ListOfDoubleConverter {
     @TypeConverter
-    public String ObjectToString(List<Integer> list) {
+    public String ObjectToString(List<Double> list) {
         Gson gson = new Gson();
         return gson.toJson(list);
     }
 
     @TypeConverter
-    public List<Integer> StringToObject(String str) {
+    public List<Double> StringToObject(String str) {
         Gson gson = new Gson();
-        List<Integer> result;
-        Integer[] tmp = gson.fromJson(str, Integer[].class);
-        result = new ArrayList<Integer>();
+        List<Double> result;
+        Double[] tmp = gson.fromJson(str, Double[].class);
+        result = new ArrayList<Double>();
         if(tmp != null) Collections.addAll(result, tmp);
         return result;
     }

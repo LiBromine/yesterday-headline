@@ -146,6 +146,10 @@ public class NewsViewModel extends AndroidViewModel {
         mRepository.getEpidemicInfoByRegionName(country, province, county);
     }
 
+    void clearAll() {
+        mRepository.clearAll();
+    }
+
     void getEpidemicInfoOfCountries() {
         mRepository.getEpidemicInfoOfCountries();
     }
