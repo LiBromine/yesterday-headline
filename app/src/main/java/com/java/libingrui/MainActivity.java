@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.os.AsyncTask;
 
 import android.util.Log;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     public static final String ID = "id";
@@ -83,16 +84,12 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    public void onGroupItemClick(MenuItem item) {
-        // One of the group items (using the onClick attribute) was clicked
-        // The item parameter passed here indicates which item it is
-        // All other menu item clicks are handled by <code><a href="/reference/android/app/Activity.html#onOptionsItemSelected(android.view.MenuItem)">onOptionsItemSelected()</a></code>
-    }
-
-    public void onClickHistory(MenuItem item) {
+    public void onMainMenuItemClick(MenuItem item) {
         if (item.getTitle().toString().equals(getString(R.string.history))) {
             Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
             startActivity(intent);
+        } else if (item.getTitle().toString().equals(getString(R.string.clear_cache))) {
+            Toast.makeText(this, "缓存已清除", Toast.LENGTH_SHORT).show();
         }
     }
 

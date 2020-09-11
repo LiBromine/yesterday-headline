@@ -2,10 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <group android:id="@+id/group">
-        <item android:id="@+id/wechat"
-            android:title="@string/wechat"/>
-        <item android:id="@+id/sina"
-            android:title="@string/sina"/>
+        <item android:id="@+id/share"
+            android:title="@string/share"
+            android:onClick="onShare"/>
     </group>
 
 </menu>

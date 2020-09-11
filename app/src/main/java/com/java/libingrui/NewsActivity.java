@@ -5,19 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TextView;
-
-import android.util.Log;
-
-import org.w3c.dom.Text;
 
 public class NewsActivity extends AppCompatActivity {
     private NewsViewModel mViewModel;
@@ -85,7 +80,19 @@ public class NewsActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.news_detial, menu);
+        menuInflater.inflate(R.menu.news_detail, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    public void onShare(MenuItem item) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+
+
+        String toShare = mNews.content.substring(0, 30) + "...";
+        intent.putExtra(Intent.EXTRA_TEXT, toShare);
+        intent.setType("text/plain");
+
+        Intent shareIntent = Intent.createChooser(intent, null);
+        startActivity(shareIntent);
     }
 }
