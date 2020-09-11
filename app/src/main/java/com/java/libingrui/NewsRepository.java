@@ -678,7 +678,7 @@ public class NewsRepository {
     static class NewsValueComparatorByMyDate implements Comparator<News> {
         @Override
         public int compare(News e1, News e2) {
-            return -1 * e1.myDate.compareTo(e2.myDate);
+            return e1.myDate.compareTo(e2.myDate);
         }
     }
 
