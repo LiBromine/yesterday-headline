@@ -57,18 +57,18 @@ abstract class NewsRoomDatabase extends RoomDatabase {
             databaseWriteExecutor.execute(new Runnable() {
                 @Override
                 public void run() {
-//                    Log.v("debug","db callback");
-//                    NewsDao dao = INSTANCE.newsDao();
-//                    dao.deleteAllNews();
-//                    dao.deleteAllNewsList();
-//                    dao.deleteAllEpidemicInfo();
-//                    dao.deleteAllEntityData();
-//                    dao.deleteAllNewsEntityCrossRef();
-//                    dao.deleteAllEntityDataList();
-//                    dao.deleteAllStringList();
-//                    dao.deleteAllPerson();
-//                    dao.deleteAllPersonList();
-//                    dao.deleteAllBitmapData();
+                    Log.v("debug","db callback");
+                    NewsDao dao = INSTANCE.newsDao();
+                    dao.deleteAllNews();
+                    dao.deleteAllNewsList();
+                    dao.deleteAllEpidemicInfo();
+                    dao.deleteAllEntityData();
+                    dao.deleteAllNewsEntityCrossRef();
+                    dao.deleteAllEntityDataList();
+                    dao.deleteAllStringList();
+                    dao.deleteAllPerson();
+                    dao.deleteAllPersonList();
+                    dao.deleteAllBitmapData();
                 }
             });
         }

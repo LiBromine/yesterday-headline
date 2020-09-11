@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -204,10 +205,14 @@ public class NewsRepository {
                         mNewsDao.insert(cur_data);
                     }
                     else {
-                        cur_data = new BitmapData();
+                        if(url == null || url.length() == 0) {
+                            return;
+                        }
+                        cur_data = BitmapByteArrayConverter.BitmapToByteArray(new RemoteServiceManager().getBitmapByUrl(url));
                         cur_data.url = url;
                         cur_data.selected = 1;
-                        cur_data.bitmap = BitmapByteArrayConverter.BitmapToByteArray(new RemoteServiceManager().getBitmapByUrl(url));
+                        Log.v("debug", "url="+url);
+                        Log.v("debug", "length="+cur_data.bitmap.length);
                         mNewsDao.insert(cur_data);
                     }
                 }
