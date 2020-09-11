@@ -131,9 +131,6 @@ public class RemoteServiceManager {
             Gson gson = new Gson();
             API_GETENTITIESBYKEYWORD api_getentitiesbykeyword = gson.fromJson(json, API_GETENTITIESBYKEYWORD.class);
             list.addAll(api_getentitiesbykeyword.data);
-            for(EntityRelation item : api_getentitiesbykeyword.data.get(0).abstractInfo.COVID.relations) {
-                Log.v("debug", "network: " + item.relation + "/" + item.forward + "/" + item.label);
-            }
         }
         Log.v("debug", "keyword entity size=" + list.size());
         return list;

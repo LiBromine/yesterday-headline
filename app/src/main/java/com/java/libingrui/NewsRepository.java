@@ -511,7 +511,6 @@ public class NewsRepository {
                             e.printStackTrace();
                         }
                     }
-                    Log.v("debug", "result="+current_data.entityDetails.label);
                     current_data.selected = 1;
                     mNewsDao.insert(current_data);
                 }
