@@ -21,7 +21,8 @@ import android.util.Log;
                     EntityDataList.class,
                     StringList.class,
                     Person.class,
-                    PersonList.class
+                    PersonList.class,
+                    BitmapData.class
                     },
         version = 1, exportSchema = false)
 abstract class NewsRoomDatabase extends RoomDatabase {
@@ -67,6 +68,7 @@ abstract class NewsRoomDatabase extends RoomDatabase {
                     dao.deleteAllStringList();
                     dao.deleteAllPerson();
                     dao.deleteAllPersonList();
+                    dao.deleteAllBitmapData();
                 }
             });
         }

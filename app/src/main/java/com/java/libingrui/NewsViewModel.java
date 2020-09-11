@@ -33,6 +33,8 @@ public class NewsViewModel extends AndroidViewModel {
     private LiveData<StringList> mGetProvincesList;
     private LiveData<StringList> mGetCountiesList;
 
+    private LiveData<BitmapData> mSelectedBitmapData;
+
     private LiveData<List<EpidemicInfo>> mSelectedEpidemicInfo;
 
     public NewsViewModel(Application application) {
@@ -62,6 +64,8 @@ public class NewsViewModel extends AndroidViewModel {
         mSelectedEpidemicInfo = mRepository.getSelectedEpidemicInfo();
 
         mGetSearchEntityDataList = mRepository.getSearchEntityDataList();
+
+        mSelectedBitmapData = mRepository.getSelectedBitmapData();
     }
 
     LiveData<NewsList> getListByType(String type) {
@@ -94,6 +98,8 @@ public class NewsViewModel extends AndroidViewModel {
         return null;
     }
 
+    LiveData<BitmapData> getSelectedBitmapData() { return mSelectedBitmapData;}
+
     LiveData<EntityDataList> getSearchEntityDataList() {
         return mGetSearchEntityDataList;
     }
@@ -108,6 +114,10 @@ public class NewsViewModel extends AndroidViewModel {
 
     LiveData<PersonList> getPassedAwayPersonList() {
         return mPassedAwayPersonList;
+    }
+
+    void getBitmapDataByUrl(String url) throws MyException{
+        mRepository.getBitmapDataByUrl(url);
     }
 
     void getProvincesOfCountry(String country) {

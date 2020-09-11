@@ -26,7 +26,7 @@ public class RemoteServiceManager {
     private final int NEWS_PER_PAGE;
     private final int PAGE_NUMBER;
 
-    private final int TIMEOUT = 10000;
+    private final int TIMEOUT = 3000;
 
     RemoteServiceManager() {
         NEWS_PER_PAGE = 10;

@@ -13,7 +13,6 @@ public class EntityData {
     @Embedded
     @NonNull
     public EntityDetails entityDetails;
-    public byte[] bitmap;
 
     public int selected;
 }

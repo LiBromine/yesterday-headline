@@ -44,6 +44,22 @@ public interface NewsDao {
     @Query("DELETE from NewsEntityCrossRef")
     void deleteAllNewsEntityCrossRef();
 
+    //------------BitmapData--------
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insert(BitmapData data);
+
+    @Query("DELETE from BitmapData")
+    void deleteAllBitmapData();
+
+    @Query("SELECT * from BitmapData where selected=1")
+    LiveData<BitmapData> getSelectedBitmapData();
+
+    @Query("SELECT * from BitmapData where url like :target_url")
+    BitmapData getBitmapDataByUrl(String target_url);
+
+    @Query("SELECT * from BitmapData where selected=1")
+    List<BitmapData> getNormalSelectedBitmapData();
+
     //------------Person------------
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Person person);
