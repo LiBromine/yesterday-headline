@@ -55,6 +55,7 @@ public class News {
     public int selected;
     public int is_watched;
     public Date myDate;
+    public int cluster_type;
 }
 
 class ListOfLiBrEntityConverter {

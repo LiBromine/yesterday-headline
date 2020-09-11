@@ -31,6 +31,9 @@ public interface NewsDao {
     @Query("SELECT * from News where News.is_watched=1")
     List<News> getNormalWatchedNews();
 
+    @Query("SELECT * from News where type='event' and cluster_type like :target_type")
+    List<News> getEventListByType(int target_type);
+
     @Update
     void updateNews(News news);
 
@@ -120,6 +123,9 @@ public interface NewsDao {
     @Query("SELECT * from NewsList where type='watched'")
     LiveData<NewsList> getWatchedList();
 
+    @Query("SELECT * from NewsList where type='event'")
+    LiveData<NewsList> getEventList();
+
     //------------EntityData--------------
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(EntityData data);
@@ -168,6 +174,9 @@ public interface NewsDao {
     @Transaction
     @Query("SELECT * from StringList where type='counties'")
     LiveData<StringList> getCountiesStringList();
+
+    @Query("SELECT * from StringList where type='keywords'")
+    LiveData<StringList> getKeywordsStringList();
 
     @Query("SELECT * from StringList where type like :target_type")
     StringList getStringListByType(String target_type);

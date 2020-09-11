@@ -18,6 +18,8 @@ public class NewsViewModel extends AndroidViewModel {
 
     private LiveData<NewsList> mWatchedList;
 
+    private LiveData<NewsList> mEventList;
+
     private LiveData<PersonList> mAllPersonList;
     private LiveData<PersonList> mPassedAwayPersonList;
 
@@ -32,6 +34,8 @@ public class NewsViewModel extends AndroidViewModel {
     private LiveData<StringList> mGetCountriesList;
     private LiveData<StringList> mGetProvincesList;
     private LiveData<StringList> mGetCountiesList;
+
+    private LiveData<StringList> mGetKeywordsList;
 
     private LiveData<BitmapData> mSelectedBitmapData;
 
@@ -48,6 +52,8 @@ public class NewsViewModel extends AndroidViewModel {
 
         mWatchedList = mRepository.getWatchedList();
 
+        mEventList = mRepository.getEventList();
+
         mAllPersonList = mRepository.getAllPersonList();
         mPassedAwayPersonList = mRepository.getPassedAwayPersonList();
 
@@ -60,6 +66,8 @@ public class NewsViewModel extends AndroidViewModel {
         mGetCountriesList = mRepository.getCountriesList();
         mGetProvincesList = mRepository.getProvincesList();
         mGetCountiesList = mRepository.getCountiesList();
+
+        mGetKeywordsList = mRepository.getKeywordsList();
 
         mSelectedEpidemicInfo = mRepository.getSelectedEpidemicInfo();
 
@@ -81,6 +89,9 @@ public class NewsViewModel extends AndroidViewModel {
         if(type.equals("watched")) {
             return mWatchedList;
         }
+        if(type.equals("event")) {
+            return mEventList;
+        }
         //@TODO throw an Exception rather than return a null, because return a null may cause system crash
         return null;
     }
@@ -94,6 +105,9 @@ public class NewsViewModel extends AndroidViewModel {
         }
         if(type.equals("counties")) {
             return mGetCountiesList;
+        }
+        if(type.equals("keywords")) {
+            return  mGetKeywordsList;
         }
         return null;
     }
@@ -172,6 +186,14 @@ public class NewsViewModel extends AndroidViewModel {
 
     void flushPassedAwayPerson() {
         mRepository.getPassedAwayPerson();
+    }
+
+    void flushEventNews() {
+        mRepository.flushEventNews();
+    }
+
+    void getEventListByType(int type) {
+        mRepository.getEventListByType(type);
     }
 
     void searchNewsByKeyword(final String keyword) {
