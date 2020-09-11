@@ -19,6 +19,8 @@ public class ScholarDetailActivity extends AppCompatActivity {
     private TextView affiliationV;
     private TextView positionV;
     private TextView idV;
+    private TextView bioV;
+    private TextView eduV;
 
     private Person p;
 
@@ -33,6 +35,8 @@ public class ScholarDetailActivity extends AppCompatActivity {
         idV = findViewById(R.id.scholar_id);
         imgV = findViewById(R.id.scholar_img);
         candleV = findViewById(R.id.candle);
+        bioV = findViewById(R.id.scholar_bio);
+        eduV = findViewById(R.id.scholar_edu);
 
         initToolbar();
         initViewModel();
@@ -77,6 +81,8 @@ public class ScholarDetailActivity extends AppCompatActivity {
         if (p.is_passedaway) {
             candleV.setImageDrawable(getDrawable(R.drawable.candle));
         }
+        bioV.setText(p.profile.bio);
+        eduV.setText(p.profile.edu);
     }
 
 }

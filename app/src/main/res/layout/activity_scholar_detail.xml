@@ -48,89 +48,153 @@
             app:cardCornerRadius="12dp"
             app:cardElevation="12dp" >
 
-
-        <LinearLayout
-            android:id="@+id/scholar_brief_list"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginBottom="5dp">
-
             <LinearLayout
-                android:id="@+id/scholar_brief_pic"
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:layout_weight="2"
-                android:orientation="vertical"
-                android:layout_marginHorizontal="0dp"
-                android:layout_marginBottom="5dp">
-
-                <ImageView
-                    android:id="@+id/scholar_img"
-                    android:layout_width="wrap_content"
-                    android:minWidth="5dp"
-                    android:layout_height="wrap_content" />
-
-                <ImageView
-                    android:id="@+id/candle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/scholar_brief_info"
                 android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:layout_weight="1"
                 android:orientation="vertical"
-                android:layout_marginHorizontal="15dp"
-                android:layout_marginBottom="5dp">
+                >
 
 
-                <TextView
-                    android:id="@+id/scholar_name"
+
+                <LinearLayout
+                    android:id="@+id/scholar_brief_list"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginBottom="5dp">
+
+                    <LinearLayout
+                        android:id="@+id/scholar_brief_pic"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_weight="2"
+                        android:orientation="vertical"
+                        android:layout_marginHorizontal="0dp"
+                        android:layout_marginBottom="5dp">
+
+                        <ImageView
+                            android:id="@+id/scholar_img"
+                            android:layout_width="wrap_content"
+                            android:minWidth="5dp"
+                            android:layout_height="wrap_content" />
+
+                        <ImageView
+                            android:id="@+id/candle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/scholar_brief_info"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginHorizontal="15dp"
+                        android:layout_marginBottom="5dp">
+
+
+                        <TextView
+                            android:id="@+id/scholar_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="1dp"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:text="@string/test"
+                            android:textColor="@color/myBlack"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginBottom="10dp"
+                            android:lineSpacingMultiplier="0.9" />
+
+                        <TextView
+                            android:id="@+id/scholar_affiliation"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="1dp"
+                            android:textColor="@color/myBlack"
+                            android:text="@string/test_text"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:id="@+id/scholar_position"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="1dp"
+                            android:textColor="@color/myBlack"
+                            android:text="@string/test_text"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:id="@+id/scholar_id"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:text="" />
+
+                     </LinearLayout>
+                 </LinearLayout>
+
+                <LinearLayout
+                    android:tag="expr_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="1dp"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:text="@string/test"
-                    android:textColor="@color/myBlack"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginBottom="10dp"
-                    android:lineSpacingMultiplier="0.9" />
+                    android:layout_marginHorizontal="20dp"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/scholar_affiliation"
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Bio"
+                        android:textStyle="bold"
+                        android:textSize="22sp"
+                        />
+
+                    <TextView
+                        android:id="@+id/scholar_bio"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/test"
+                        android:textStyle="normal"
+                        android:textSize="15sp"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:tag="expr_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="1dp"
-                    android:textColor="@color/myBlack"
-                    android:text="@string/test_text"
-                    android:textSize="15sp" />
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginBottom="30dp"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/scholar_position"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="1dp"
-                    android:textColor="@color/myBlack"
-                    android:text="@string/test_text"
-                    android:textSize="15sp" />
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Education"
+                        android:textStyle="bold"
+                        android:textSize="22sp"
+                        />
 
-                <TextView
-                    android:id="@+id/scholar_id"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:text="" />
+                    <TextView
+                        android:id="@+id/scholar_edu"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/test"
+                        android:textStyle="normal"
+                        android:textSize="15sp"
+                        />
 
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
-
         </androidx.cardview.widget.CardView>
 
     </LinearLayout>
