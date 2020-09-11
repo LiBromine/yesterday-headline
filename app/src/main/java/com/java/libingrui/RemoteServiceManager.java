@@ -22,6 +22,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
+
 public class RemoteServiceManager {
     private final int NEWS_PER_PAGE;
     private final int PAGE_NUMBER;
@@ -116,6 +118,7 @@ public class RemoteServiceManager {
             return api_getentitybyurl.data;
         }
         else {
+            Log.v("debug", "json=null");
             return null;
         }
     }
@@ -128,7 +131,9 @@ public class RemoteServiceManager {
             Gson gson = new Gson();
             API_GETENTITIESBYKEYWORD api_getentitiesbykeyword = gson.fromJson(json, API_GETENTITIESBYKEYWORD.class);
             list.addAll(api_getentitiesbykeyword.data);
-            Log.v("debug", "forward="+api_getentitiesbykeyword.data.get(0).abstractInfo.COVID.relations.get(api_getentitiesbykeyword.data.get(0).abstractInfo.COVID.relations.size()-1).forward);
+            for(EntityRelation item : api_getentitiesbykeyword.data.get(0).abstractInfo.COVID.relations) {
+                Log.v("debug", "network: " + item.relation + "/" + item.forward + "/" + item.label);
+            }
         }
         Log.v("debug", "keyword entity size=" + list.size());
         return list;

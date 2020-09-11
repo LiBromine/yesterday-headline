@@ -501,6 +501,7 @@ public class NewsRepository {
 
                     EntityData current_data = mNewsDao.getEntityDataByUrl(url);
                     if(current_data == null) {
+                        Log.v("debug", "read from remote");
                         RemoteServiceManager mangager = new RemoteServiceManager();
                         current_data = new EntityData();
                         try {
@@ -510,6 +511,7 @@ public class NewsRepository {
                             e.printStackTrace();
                         }
                     }
+                    Log.v("debug", "result="+current_data.entityDetails.label);
                     current_data.selected = 1;
                     mNewsDao.insert(current_data);
                 }
@@ -688,6 +690,7 @@ public class NewsRepository {
                         current.entityDetails = item;
                         current.selected = 0;
                         result.add(current);
+                        mNewsDao.insert(current);
                     }
 
                     EntityDataList list = mNewsDao.getEntityDataListByType("search");
