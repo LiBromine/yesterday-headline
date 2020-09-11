@@ -53,6 +53,15 @@ public class ScholarAdapter extends RecyclerView.Adapter<ScholarAdapter.MyHolder
             holder.idV.setText(p.id);
             holder.imgV.setText(p.avatar);
         }
+
+        if (onItemClickListener != null) {
+            holder.root.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onItemClickListener.onItemClick(view, position);
+                }
+            });
+        }
     }
 
     @Override
@@ -81,6 +90,7 @@ public class ScholarAdapter extends RecyclerView.Adapter<ScholarAdapter.MyHolder
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);
+            root = (CardView) itemView;
             imgV = itemView.findViewById(R.id.scholar_img);
             nameV = itemView.findViewById(R.id.scholar_name);
             affiliationV = itemView.findViewById(R.id.scholar_affiliation);

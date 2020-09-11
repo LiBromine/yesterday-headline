@@ -80,6 +80,7 @@ public class ScholarFragment extends Fragment {
                     mNewsViewModel.getBitmapDataByUrl(img);
                 } catch (Exception e) { }
 
+                Log.v("debug", "exactly to here in ScholarFragment");
                 Intent intent = new Intent(getContext(), ScholarDetailActivity.class);
                 intent.putExtra(MainActivity.ID, id);
 //                intent.putExtra(IMG, img);

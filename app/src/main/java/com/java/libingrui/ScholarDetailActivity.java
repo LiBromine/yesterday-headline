@@ -32,6 +32,7 @@ public class ScholarDetailActivity extends AppCompatActivity {
         positionV = findViewById(R.id.scholar_position);
         idV = findViewById(R.id.scholar_id);
         imgV = findViewById(R.id.scholar_img);
+        candleV = findViewById(R.id.candle);
 
         initToolbar();
         initViewModel();
