@@ -45,6 +45,7 @@ public class EntityViewAdapter extends RecyclerView.Adapter<EntityViewAdapter.En
             holder.labelView.setText(details.label);
             holder.hotView.setText(details.hot);
             holder.urlView.setText(details.url);
+            holder.imageView.setText(details.img);
         }
 
         if (mOnItemClickListener != null) {
@@ -77,6 +78,7 @@ public class EntityViewAdapter extends RecyclerView.Adapter<EntityViewAdapter.En
         public TextView labelView;
         public TextView hotView;
         public TextView urlView;
+        public TextView imageView;
 
         public EntityHolder(@NonNull View itemView) {
             super(itemView);
@@ -84,6 +86,7 @@ public class EntityViewAdapter extends RecyclerView.Adapter<EntityViewAdapter.En
             labelView = itemView.findViewById(R.id.entity_label);
             hotView = itemView.findViewById(R.id.entity_hot);
             urlView = itemView.findViewById(R.id.entity_url);
+            imageView = itemView.findViewById(R.id.entity_image);
         }
     }
 }

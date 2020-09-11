@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 public class EntityListActivity extends AppCompatActivity {
     public static String URL = "url";
+    public static String IMAGE = "image";
 
     private RecyclerView mRecycler;
     private EntityViewAdapter mAdapter;
@@ -51,11 +52,17 @@ public class EntityListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(View view, int position) {
                 TextView urlReg = view.findViewById(R.id.entity_url);
+                TextView imgReg = view.findViewById(R.id.entity_image);
                 String url = urlReg.getText().toString();
+                String img = imgReg.getText().toString();
                 mNewsViewModel.getEntityDataByUrl(url);
+                try {
+                    mNewsViewModel.getBitmapDataByUrl(img);
+                } catch (Exception e) { }
 
                 Intent intent = new Intent(EntityListActivity.this, EntityActivity.class);
                 intent.putExtra(EntityListActivity.URL, url);
+                intent.putExtra(EntityListActivity.IMAGE, img);
                 startActivity(intent);
             }
         });

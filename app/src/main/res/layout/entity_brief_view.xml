@@ -48,6 +48,13 @@
             android:layout_height="wrap_content"
             android:visibility="gone"
             android:text="" />
+
+        <TextView
+            android:id="@+id/entity_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="" />
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

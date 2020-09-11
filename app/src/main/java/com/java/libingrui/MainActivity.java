@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
         initListCollectionFragment();
         initToolbar();
         initSearchView();
-        setupWindowAnimations();
 
         // update covid data in Main Activity
         mNewsViewModel = new ViewModelProvider(this).get(NewsViewModel.class);
@@ -90,12 +89,13 @@ public class MainActivity extends AppCompatActivity {
         // All other menu item clicks are handled by <code><a href="/reference/android/app/Activity.html#onOptionsItemSelected(android.view.MenuItem)">onOptionsItemSelected()</a></code>
     }
 
-    private void setupWindowAnimations() {
-        Fade fade = new Fade();
-        fade.setDuration(1000);
-//        getWindow().setEnterTransition(fade);
-        getWindow().setExitTransition(fade);
+    public void onClickHistory(MenuItem item) {
+        if (item.getTitle().toString().equals(getString(R.string.history))) {
+            Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
+            startActivity(intent);
+        }
     }
+
 
     public void initSearchView() {
         searchView = findViewById(R.id.my_search);

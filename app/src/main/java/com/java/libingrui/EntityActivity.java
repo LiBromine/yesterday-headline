@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -48,8 +50,27 @@ public class EntityActivity extends AppCompatActivity {
 
         Intent i = getIntent();
         String url = i.getStringExtra(EntityListActivity.URL);
+        String img = i.getStringExtra(EntityListActivity.IMAGE);
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Bitmap b = getImageBitmap(img);
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        imageView.setImageBitmap(b);
+                    }
+                });
+            }
+        });
+
+
+
         urlView.setText(url); // ?
         mNewsViewModel.getEntityDataByUrl(url);
+
     }
 
     private void initToolbar() {
@@ -64,17 +85,33 @@ public class EntityActivity extends AppCompatActivity {
             @Override
             public void onChanged(EntityData entityData) {
                 if (entityData != null) {
-                    // show the basic info
                     entity = entityData;
+
+                    // emit the img
+//                    try {
+//                        mNewsViewModel.getBitmapDataByUrl(entity.entityDetails.img);
+//                    } catch (MyException e) {
+//                        e.printStackTrace();
+//                    }
+
+                    // show the basic info
                     labelView.setText(entity.entityDetails.label);
                     EntityAbstractInfo abInfo = entity.entityDetails.abstractInfo;
                     String wiki = abInfo.enwiki + abInfo.baidu + abInfo.zhwiki;
                     wikiView.setText(wiki);
 
-                    // TODO, show the propery and relation;
+                    // show the propery and relation;
                     mAdapterRelation.setList(abInfo.COVID.relations);
                     mAdapterProperty.setList(abInfo.COVID.properties);
                 }
+            }
+        });
+        mNewsViewModel.getSelectedBitmapData().observe(this, new Observer<BitmapData>() {
+            @Override
+            public void onChanged(BitmapData bitmapData) {
+//                if (bitmapData != null) {
+//                    imageView.setImageBitmap(BitmapFactory.decodeByteArray(bitmapData.bitmap, 0, bitmapData.bitmap.length));
+//                }
             }
         });
     }
